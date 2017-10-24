@@ -7,18 +7,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
+import java.util.HashSet;
 
 public class GameField extends JPanel implements ActionListener, Serializable{
-    private int WIDTH = 25;
-    private int HEIGHT = 25;
-    private int PIXEL = 25;
+    private int WIDTH;
+    private int HEIGHT;
+    private int PIXEL;
     private Image foodIm;
     private Image snakeIm;
     private Image gameOver;
+    private Image bush;
     private Timer timer;
     private int direction;
     private Food food;
     private Snake snake;
+    private HashSet maze;
     private boolean inGame = true;
     private boolean isPause = false;
 
@@ -32,7 +35,6 @@ public class GameField extends JPanel implements ActionListener, Serializable{
         initGame();
         addKeyListener(new FieldKeyListener());
         setFocusable(true);
-
     }
 
     private void initGame(){
@@ -50,6 +52,8 @@ public class GameField extends JPanel implements ActionListener, Serializable{
         snakeIm = s.getImage();
         ImageIcon g = new ImageIcon("gameOver.jpg");
         gameOver = g.getImage();
+        ImageIcon b = new ImageIcon("bush.jpg");
+        bush = b.getImage();
     }
 
     @Override
@@ -67,10 +71,7 @@ public class GameField extends JPanel implements ActionListener, Serializable{
             timer.stop();
         }
         g.setColor(Color.green);
-        g.drawLine(0, 0, WIDTH*PIXEL, 0);
-        g.drawLine(0, 0, 0, HEIGHT*PIXEL);
-        g.drawLine(WIDTH*PIXEL, 0, WIDTH*PIXEL, HEIGHT*PIXEL);
-        g.drawLine(0, HEIGHT*PIXEL, WIDTH*PIXEL, HEIGHT*PIXEL);
+        g.drawRect(0,0,WIDTH*PIXEL,HEIGHT*PIXEL);
         g.setColor(Color.cyan);
         g.drawString("Score:", WIDTH*PIXEL + 100, 100);
         g.drawString(Integer.toString((snake.getLength() - 1) * 10), WIDTH*PIXEL + 100, 150);
@@ -125,7 +126,6 @@ public class GameField extends JPanel implements ActionListener, Serializable{
             if(key == KeyEvent.VK_RIGHT && direction != KeyEvent.VK_LEFT){
                 direction = KeyEvent.VK_RIGHT;
             }
-
             if(key == KeyEvent.VK_UP && direction != KeyEvent.VK_DOWN){
                 direction = KeyEvent.VK_UP;
             }
