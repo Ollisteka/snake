@@ -8,13 +8,15 @@ public class Config implements Serializable{
     private int pixelSize;
     private int windowHeight;
     private int windowWidth;
+    private int timerTick;
 
-    public Config(){
-        fieldWidth = 30;
-        fieldHeight = 25;
-        pixelSize = 25;
+    public Config(int width, int height, int pixel, int tick){
+        fieldWidth = width;
+        fieldHeight = height;
+        pixelSize = pixel;
         windowHeight = fieldHeight * pixelSize + 57;
         windowWidth = fieldWidth * pixelSize + 265;
+        timerTick = tick;
     }
 
     public int getFieldWidth(){
@@ -35,5 +37,9 @@ public class Config implements Serializable{
 
     public int getWindowWidth() {
         return windowWidth;
+    }
+
+    public int getTimerTick() {
+        return timerTick;
     }
 }

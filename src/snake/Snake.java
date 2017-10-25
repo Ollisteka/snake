@@ -6,72 +6,80 @@ public class Snake
 {
     public Snake()
     {
-        locations = new Point[25 * 25];
-        reset();
+        length = 2;
+        right = true;
     }
 
     private int length;
-
     public int getLength() {
         return length;
     }
-
     public void setLength(int newLength){
         length = newLength;
     }
 
-    private Point[] locations;
+    private boolean right;
+    private boolean left;
+    private boolean up;
+    private boolean down;
 
-    public Point[] getLocations() {
-        return locations;
+    public boolean looksRight(){
+        return right;
     }
 
-    public void setLocations(Point[] newLocations){
-        locations = newLocations;
-        setLength(newLocations.length);
+    public boolean looksLeft(){
+        return left;
     }
 
-
-
-    public void reset() {
-        length = 2;
-        locations[0] = new Point(1, 0);
-        locations[1] = new Point(0, 0);
+    public boolean looksUp(){
+        return up;
     }
 
-    public void move() {
-        for (int i = length - 1; i > 0; i--) {
-            locations[i].x = locations[i - 1].x;
-            locations[i].y = locations[i - 1].y;
+    public boolean looksDown(){
+        return down;
+    }
+
+    public void moveRight(){
+        if (!left) {
+            right = true;
+            left = false;
+            up = false;
+            down = false;
         }
-
-    }
-    public void turnUp() {
-        move();
-        locations[0].y--;
     }
 
-    public void turnDown() {
-        move();
-        locations[0].y++;
+    public void moveUp() {
+        if (!down) {
+            up = true;
+            left = false;
+            right = false;
+            down = false;
+        }
     }
 
-    public void turnLeft() {
-        move();
-        locations[0].x--;
+    public void moveDown() {
+        if (!up) {
+            down = true;
+            left = false;
+            up = false;
+            right = false;
+        }
     }
-
-    public void turnRight() {
-        move();
-        locations[0].x++;
+    public void moveLeft() {
+        if (!right) {
+            left = true;
+            right = false;
+            up = false;
+            down = false;
+        }
     }
 
     public void addLength() {
         length++;
-        locations[length - 1] = new Point();
-        locations[length - 1].x = locations[length - 2].x;
-        locations[length - 1].y = locations[length - 2].y;
     }
 
+    public void eatFood(){
+        addLength();
+    }
 
 }
