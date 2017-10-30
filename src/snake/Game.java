@@ -11,11 +11,12 @@ public class Game extends JFrame{
         Config config = new Config(25, 25, 25, 250);
         setSize(config.getWindowWidth(),config.getWindowHeight());
         setLocation(100,100);
-        //GameField firstGF = new GameField(config);
+        //GameField first = new GameField(config);
         LevelRedactor firstGF = new LevelRedactor(config);
-        JButton LRButton = new JButton("Level redactor");
+        //JButton LRButton = new JButton("Level redactor");
 
         add(firstGF); // add on the main window
+        //add(first);
         setVisible(true);
     }
 

@@ -28,7 +28,7 @@ public class GameFieldTest {
         arr[7] = new Point(0, 1);
         arr[8] = new Point(0, 0);
         gf.setSnakeLocations(arr);
-        assertTrue(gf.isDead());
+        assertTrue(gf.isSnakeDead());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class GameFieldTest {
         arr[7] = new Point(0, 1);
         arr[8] = new Point(1, 1);
         field.setSnakeLocations(arr);
-        assertFalse(field.isDead());
+        assertFalse(field.isSnakeDead());
     }
 
     @Test
@@ -58,6 +58,6 @@ public class GameFieldTest {
         arr[1] = new Point(0, 0);
         arr[2] = new Point(1, 0);
         field.setSnakeLocations(arr);
-        assertTrue(field.isDead());
+        assertTrue(field.isSnakeDead());
     }
 }

@@ -22,7 +22,7 @@ public class Level {
         PIXEL = config.getPixelSize();
     }
 
-    private HashSet createRandomField(){
+    public HashSet createRandomField(){
         HashSet maze = new HashSet();
         for (int x = 0; x < WIDTH; x++){
             for (int y = 0; y < HEIGHT; y++){

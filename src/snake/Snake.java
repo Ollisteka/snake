@@ -4,24 +4,26 @@ import java.awt.*;
 
 public class Snake
 {
+    private int length;
+    private boolean right;
+    private boolean left;
+    private boolean up;
+    private boolean down;
+    private boolean isAlive;
+
     public Snake()
     {
         length = 2;
         right = true;
+        isAlive = true;
     }
 
-    private int length;
     public int getLength() {
         return length;
     }
     public void setLength(int newLength){
         length = newLength;
     }
-
-    private boolean right;
-    private boolean left;
-    private boolean up;
-    private boolean down;
 
     public boolean looksRight(){
         return right;
@@ -38,6 +40,8 @@ public class Snake
     public boolean looksDown(){
         return down;
     }
+
+    public boolean isAlive() { return isAlive; }
 
     public void moveRight(){
         if (!left) {
@@ -58,7 +62,7 @@ public class Snake
     }
 
     public void moveDown() {
-        if (!up) {
+        if (!down) {
             down = true;
             left = false;
             up = false;
@@ -81,5 +85,7 @@ public class Snake
     public void eatFood(){
         addLength();
     }
+
+    public void die() { isAlive = false; }
 
 }
