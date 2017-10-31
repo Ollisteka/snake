@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 
@@ -53,7 +54,13 @@ public class RedactorWindow extends JFrame {
         buttonSave.setBorder(lb);
 
         buttonGame.addActionListener(evt -> startActionPerformed(evt));
-        buttonSave.addActionListener(evt -> saveActionPerformed(evt));
+        buttonSave.addActionListener(evt -> {
+            try {
+                saveActionPerformed(evt);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void setRedactorLayout(){
@@ -84,13 +91,18 @@ public class RedactorWindow extends JFrame {
     private void startActionPerformed(ActionEvent evt) {
         this.dispose();
         Config config = new Config(25, 25, 25, 250);
+        Level level = redactor.getLevel();
+
+        new NewGame(config, level).setVisible(true);
         // Здесь надо вытащить уровень с redactor (поле этого же класса)
         // а потом запихнуть его в GameField
         //new GameField(config, ).setVisible(true);
     }
 
-    private void saveActionPerformed(ActionEvent evt) {
-        //Config config = new Config(25, 25, 25, 250);
+    private void saveActionPerformed(ActionEvent evt) throws IOException {
+        Config config = new Config(25, 25, 25, 250);
+        Level level = redactor.getLevel();
+        Game.serialize(level, "level");
         // Здесь надо вытащить уровень с redactor (поле этого же класса)
         // и сохранить
         // можно потом снова вызвать окно меню

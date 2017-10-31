@@ -16,6 +16,7 @@ public class LevelRedactor extends JPanel implements Serializable{
     private Image bush;
     private HashSet maze;
     private Config CONFIG;
+    private Level level;
 
     public LevelRedactor(Config config){
         WIDTH = config.getFieldWidth();
@@ -24,11 +25,21 @@ public class LevelRedactor extends JPanel implements Serializable{
         CONFIG = config;
         maze = new HashSet();
         location = new Point(0, 0);
+        level = new Level(config, "level");
         setBackground(Color.black);
         loadImages();
         addKeyListener(new FieldKeyListener());
         setFocusable(true);
         repaint();
+    }
+
+    public Level getLevel(){
+        level.setMazeLocations(maze);
+        return level;
+    }
+
+    public HashSet getMaze() {
+        return maze;
     }
 
     @Override

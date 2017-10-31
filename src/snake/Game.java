@@ -13,22 +13,9 @@ public class Game extends JFrame{
 
     public Game() {
         setTitle("Snake");
-        /*setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Config config = new Config(25, 25, 25, 250);
-        setSize(config.getWindowWidth(),config.getWindowHeight());
-        setLocation(100,100);
-        //GameField first = new GameField(config);
-        //LevelRedactor firstGF = new LevelRedactor(config);
-        //JButton LRButton = new JButton("Level redactor");
-        Menu firstGF = new Menu();
-        add(firstGF); // add on the main window
-        //add(first);
-        setVisible(true);
-        */
     }
 
     public static void main(String[] args) {
-        //Game mw = new Game();
         new Menu().setVisible(true);
     }
 

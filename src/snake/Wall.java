@@ -1,8 +1,9 @@
 package snake;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Wall {
+public class Wall implements Serializable {
 
     private Point location;
 

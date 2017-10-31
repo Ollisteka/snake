@@ -14,7 +14,7 @@ public class GameFieldTest {
     @Test
     public void isDead(){
         Config config = new Config(25, 25, 25, 1000);
-        GameField gf = new GameField(config, new HashSet<Wall>());
+        GameField gf = new GameField(config, new Level(config, "test"));
         //gf.setTimerStop();
         Point[] arr = new Point[9];
         arr[0] = new Point(0, 0);
@@ -33,7 +33,7 @@ public class GameFieldTest {
     @Test
     public void isNotDead() {
         Config config = new Config(25, 25, 25, 1000);
-        GameField field = new GameField(config, new HashSet<Wall>());
+        GameField field = new GameField(config, new Level(config, "test"));
         Point[] arr = new Point[9];
         arr[0] = new Point(0, 0);
         arr[1] = new Point(1, 0);
@@ -51,7 +51,7 @@ public class GameFieldTest {
     @Test
     public void outOfTheBounds() {
         Config config = new Config(25, 25, 25, 1000);
-        GameField field = new GameField(config, new HashSet<Wall>());
+        GameField field = new GameField(config, new Level(config, "test"));
         Point[] arr = new Point[3];
         arr[0] = new Point(-1, 0);
         arr[1] = new Point(0, 0);

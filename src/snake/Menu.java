@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
@@ -92,12 +93,25 @@ public class Menu extends JFrame{
     }
 
     private void uploadActionPerformed(ActionEvent evt) {
-        //Config config = new Config(25, 25, 25, 250);
+        Config config = new Config(25, 25, 25, 250);
+        try{
+            Level level = Game.deserialize("level");
+            new NewGame(config, level).setVisible(true);
+        }
+        catch (IOException e){
+            new Menu().setVisible(true);
+        }
+        catch (ClassNotFoundException e) {
+            new Menu().setVisible(true);
+        }
         this.dispose();
     }
 
     private void randomActionPerformed(ActionEvent evt) {
+        Config config = new Config(25, 25, 25, 250);
+        Level level = new Level(config,"Random");
+        level.setMazeLocations(level.createRandomField());
         this.dispose();
-        new NewGame().setVisible(true);
+        new NewGame(config, level).setVisible(true);
     }
 }

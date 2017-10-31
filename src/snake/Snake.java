@@ -2,8 +2,7 @@ package snake;
 
 import java.awt.*;
 
-public class Snake
-{
+public class Snake {
     private int length;
     private boolean right;
     private boolean left;
