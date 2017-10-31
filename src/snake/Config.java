@@ -1,5 +1,6 @@
 package snake;
 
+import java.awt.*;
 import java.io.Serializable;
 
 public class Config implements Serializable{
@@ -9,14 +10,22 @@ public class Config implements Serializable{
     private int windowHeight;
     private int windowWidth;
     private int timerTick;
+    private Color textColor;
+    private Color buttonBord;
+    private Color background;
+    private Font font;
 
     public Config(int width, int height, int pixel, int tick){
         fieldWidth = width;
         fieldHeight = height;
         pixelSize = pixel;
-        windowHeight = fieldHeight * pixelSize + 57;
-        windowWidth = fieldWidth * pixelSize + 265;
+        windowHeight = fieldHeight * pixelSize + 85;
+        windowWidth = fieldWidth * pixelSize + 285;
         timerTick = tick;
+        textColor = Color.GREEN;
+        buttonBord = Color.GREEN;
+        background = Color.BLACK;
+        font = new Font("Comic Sans MS", Font.BOLD, 20);
     }
 
     public int getFieldWidth(){
@@ -41,5 +50,21 @@ public class Config implements Serializable{
 
     public int getTimerTick() {
         return timerTick;
+    }
+
+    public Color getBackground() {
+        return background;
+    }
+
+    public Color getButtonBord() {
+        return buttonBord;
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    public Color getTextColor() {
+        return textColor;
     }
 }

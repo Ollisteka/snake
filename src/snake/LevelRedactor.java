@@ -85,13 +85,13 @@ public class LevelRedactor extends JPanel implements Serializable{
             if (key == KeyEvent.VK_LEFT && getLocation().x > 0) {
                 setLocation(--location.x, location.y);
             }
-            if (key == KeyEvent.VK_RIGHT && getLocation().x < WIDTH) {
+            if (key == KeyEvent.VK_RIGHT && getLocation().x < WIDTH - 1) {
                 setLocation(++location.x, location.y);
             }
             if (key == KeyEvent.VK_UP && getLocation().y > 0) {
                 setLocation(location.x, --location.y);
             }
-            if (key == KeyEvent.VK_DOWN && getLocation().y < HEIGHT) {
+            if (key == KeyEvent.VK_DOWN && getLocation().y < HEIGHT - 1) {
                 setLocation(location.x, ++location.y);
             }
             if (key == KeyEvent.VK_SPACE){

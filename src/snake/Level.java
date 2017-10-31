@@ -1,9 +1,10 @@
 package snake;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Random;
 
-public class Level {
+public class Level implements Serializable {
     private int WIDTH;
     private int HEIGHT;
     private int PIXEL;

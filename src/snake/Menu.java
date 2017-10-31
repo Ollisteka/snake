@@ -25,7 +25,7 @@ public class Menu extends JFrame{
         layout = new GroupLayout(getContentPane());
 
         setUpButtons();
-        setLayout();
+        setMenuLayout();
 
         setBackground(Color.BLACK);
         getContentPane().setBackground(Color.BLACK);
@@ -58,7 +58,7 @@ public class Menu extends JFrame{
         buttonOpen.setBorder(lb);
     }
 
-    private void setLayout(){
+    private void setMenuLayout(){
 
         getContentPane().setLayout(layout);
         layout.setAutoCreateGaps(true);
@@ -88,7 +88,7 @@ public class Menu extends JFrame{
 
     private void createActionPerformed(ActionEvent evt) {
         this.dispose();
-        new NewGame("redact").setVisible(true);
+        new RedactorWindow().setVisible(true);
     }
 
     private void uploadActionPerformed(ActionEvent evt) {
@@ -98,6 +98,6 @@ public class Menu extends JFrame{
 
     private void randomActionPerformed(ActionEvent evt) {
         this.dispose();
-        new NewGame("rnd").setVisible(true);
+        new NewGame().setVisible(true);
     }
 }
