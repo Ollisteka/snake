@@ -28,6 +28,7 @@ public class LevelRedactor extends JPanel implements Serializable{
         loadImages();
         addKeyListener(new FieldKeyListener());
         setFocusable(true);
+        repaint();
     }
 
     @Override

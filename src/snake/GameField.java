@@ -35,7 +35,7 @@ public class GameField extends JPanel implements ActionListener, Serializable{
         return snakeLocations;
     }
 
-    public GameField(Config config){
+    public GameField(Config config, HashSet<Wall> wallsSet){
         WIDTH = config.getFieldWidth();
         HEIGHT = config.getFieldHeight();
         PIXEL = config.getPixelSize();
@@ -45,8 +45,7 @@ public class GameField extends JPanel implements ActionListener, Serializable{
         loadImages();
         addKeyListener(new FieldKeyListener());
         setFocusable(true);
-        Level level = new Level(config, "1"); //
-        walls = level.createRandomField(); //
+        walls = wallsSet;
     }
 
 
