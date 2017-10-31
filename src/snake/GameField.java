@@ -18,7 +18,8 @@ public class GameField extends JPanel implements ActionListener, Serializable{
     private Image foodIm;
     private Image snakeIm;
     private Image gameOver;
-    private Image wallIm; //
+    private Image wallIm;
+    private Image headIm;
     private Timer timer;
     private Food food;
     private boolean isPause = false;
@@ -82,8 +83,10 @@ public class GameField extends JPanel implements ActionListener, Serializable{
         snakeIm = s.getImage();
         ImageIcon g = new ImageIcon("gameOver.jpg");
         gameOver = g.getImage();
-        ImageIcon p = new ImageIcon("bush.jpg"); //
-        wallIm = p.getImage(); //
+        ImageIcon p = new ImageIcon("bush.jpg");
+        wallIm = p.getImage();
+        ImageIcon q = new ImageIcon("head.png");
+        headIm = q.getImage();
     }
 
     @Override
@@ -92,7 +95,8 @@ public class GameField extends JPanel implements ActionListener, Serializable{
         if(!isSnakeDead()){
             Point location = food.getLocation();
             g.drawImage(foodIm,location.x * PIXEL, location.y * PIXEL, this);
-            for (int i = 0; i < snake.getLength(); i++) {
+            g.drawImage(headIm, snakeLocations[0].x * PIXEL, snakeLocations[0].y * PIXEL, this);
+            for (int i = 1; i < snake.getLength(); i++) {
                 g.drawImage(snakeIm, snakeLocations[i].x * PIXEL, snakeLocations[i].y * PIXEL, this);
             }
             for(Wall wall : level.getMazeLocations()) {
