@@ -5,9 +5,8 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class Level implements Serializable {
-    private int WIDTH;
-    private int HEIGHT;
-    private int PIXEL;
+    private int width;
+    private int height;
     private String levelName;
     private HashSet<Wall> mazeLocations;
 
@@ -25,16 +24,15 @@ public class Level implements Serializable {
 
     public Level(Config config, String level){
         levelName = level;
-        mazeLocations = new HashSet();
-        WIDTH = config.getFieldWidth();
-        HEIGHT = config.getFieldHeight();
-        PIXEL = config.getPixelSize();
+        mazeLocations = new HashSet<>();
+        width = config.getFieldWidth();
+        height = config.getFieldHeight();
     }
 
     public HashSet createRandomField(){
         HashSet maze = new HashSet();
-        for (int x = 0; x < WIDTH; x++){
-            for (int y = 0; y < HEIGHT; y++){
+        for (int x = 0; x < width; x++){
+            for (int y = 0; y < height; y++){
                 if (new Random().nextInt(50) == 0)
                     maze.add(new Wall(x, y));
             }

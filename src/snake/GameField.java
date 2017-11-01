@@ -1,8 +1,5 @@
 package snake;
 
-import javafx.util.Pair;
-
-import java.util.HashSet;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,9 +9,9 @@ import java.awt.event.KeyEvent;
 import java.io.Serializable;
 
 public class GameField extends JPanel implements ActionListener, Serializable{
-    private int WIDTH;
-    private int HEIGHT;
-    private int PIXEL;
+    private int width;
+    private int height;
+    private int pixel;
     private Image foodIm;
     private Image snakeIm;
     private Image gameOver;
@@ -37,11 +34,11 @@ public class GameField extends JPanel implements ActionListener, Serializable{
     }
 
     public GameField(Config config, Level currentLevel){
-        WIDTH = config.getFieldWidth();
-        HEIGHT = config.getFieldHeight();
-        PIXEL = config.getPixelSize();
+        width = config.getFieldWidth();
+        height = config.getFieldHeight();
+        pixel = config.getPixelSize();
         timer = new Timer(config.getTimerTick(),this);
-        setBackground(Color.black);
+        setBackground(config.getBackgroundColor());
         initGame();
         loadImages();
         addKeyListener(new FieldKeyListener());
@@ -52,9 +49,9 @@ public class GameField extends JPanel implements ActionListener, Serializable{
 
     private void initGame(){
         snake = new Snake();
-        food = new Food(WIDTH, HEIGHT);
+        food = new Food(width, height);
         timer.start();
-        snakeLocations = new Point[HEIGHT * WIDTH];
+        snakeLocations = new Point[height * width];
         snakeLocations[0] = new Point(1, 0);
         snakeLocations[1] = new Point(0, 0);
     }
@@ -94,26 +91,26 @@ public class GameField extends JPanel implements ActionListener, Serializable{
         super.paintComponent(g);
         if(!isSnakeDead()){
             Point location = food.getLocation();
-            g.drawImage(foodIm,location.x * PIXEL, location.y * PIXEL, this);
-            g.drawImage(headIm, snakeLocations[0].x * PIXEL, snakeLocations[0].y * PIXEL, this);
+            g.drawImage(foodIm,location.x * pixel, location.y * pixel, this);
+            g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
             for (int i = 1; i < snake.getLength(); i++) {
-                g.drawImage(snakeIm, snakeLocations[i].x * PIXEL, snakeLocations[i].y * PIXEL, this);
+                g.drawImage(snakeIm, snakeLocations[i].x * pixel, snakeLocations[i].y * pixel, this);
             }
             for(Wall wall : level.getMazeLocations()) {
-                g.drawImage(wallIm,wall.getLocation().x * PIXEL, wall.getLocation().y * PIXEL,this);
+                g.drawImage(wallIm,wall.getLocation().x * pixel, wall.getLocation().y * pixel,this);
             }
         } else{
-            g.drawImage(gameOver, WIDTH/2*PIXEL-420,HEIGHT/2*PIXEL-240, this);
+            g.drawImage(gameOver, width /2* pixel -420, height /2* pixel -240, this);
             timer.stop();
         }
         g.setColor(Color.green);
-        g.drawLine(0, 0, WIDTH*PIXEL, 0);
-        g.drawLine(0, 0, 0, HEIGHT*PIXEL);
-        g.drawLine(WIDTH*PIXEL, 0, WIDTH*PIXEL, HEIGHT*PIXEL);
-        g.drawLine(0, HEIGHT*PIXEL, WIDTH*PIXEL, HEIGHT*PIXEL);
+        g.drawLine(0, 0, width * pixel, 0);
+        g.drawLine(0, 0, 0, height * pixel);
+        g.drawLine(width * pixel, 0, width * pixel, height * pixel);
+        g.drawLine(0, height * pixel, width * pixel, height * pixel);
         g.setColor(Color.cyan);
-        g.drawString("Score:", WIDTH*PIXEL + 100, 100);
-        g.drawString(Integer.toString((snake.getLength() - 1) * 10), WIDTH*PIXEL + 100, 150);
+        g.drawString("Score:", width * pixel + 100, 100);
+        g.drawString(Integer.toString((snake.getLength() - 1) * 10), width * pixel + 100, 150);
 
     }
 
@@ -131,13 +128,13 @@ public class GameField extends JPanel implements ActionListener, Serializable{
             snake.eatFood();
             int i = snake.getLength()-1;
             snakeLocations[i] = new Point(snakeLocations[i-1].x, snakeLocations[i-1].y);
-            food.createFood(WIDTH, HEIGHT);
+            food.createFood(width, height);
             int count = 0;
             while (count < level.getMazeLocations().size()) {
                 for (Wall wall : level.getMazeLocations()) {
                     if (wall.getLocation().x == food.getLocation().x &&
                             wall.getLocation().y == food.getLocation().y) {
-                        food.createFood(WIDTH, HEIGHT);
+                        food.createFood(width, height);
                         count = 0;
                     }
                     count++;
@@ -156,8 +153,8 @@ public class GameField extends JPanel implements ActionListener, Serializable{
         }
         if (snakeLocations[0].x < 0 ||
                 snakeLocations[0].y < 0 ||
-                snakeLocations[0].x >= WIDTH ||
-                snakeLocations[0].y >= HEIGHT) {
+                snakeLocations[0].x >= width ||
+                snakeLocations[0].y >= height) {
             snake.die();
             return true;
         }
@@ -197,10 +194,6 @@ public class GameField extends JPanel implements ActionListener, Serializable{
                     timer.stop();
                 }
             }
-            //if(key == KeyEvent.VK_ENTER){
-            //   if (!snake.isAlive())
-            //       new Menu().setVisible(true);
-            //}
         }
     }
 }

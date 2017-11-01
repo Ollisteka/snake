@@ -1,7 +1,5 @@
 package snake;
 
-import java.awt.*;
-
 public class Snake {
     private int length;
     private boolean right;
@@ -40,7 +38,9 @@ public class Snake {
         return down;
     }
 
-    public boolean isAlive() { return isAlive; }
+    public boolean isAlive(){
+        return isAlive;
+    }
 
     public void moveRight(){
         if (!left) {
@@ -81,10 +81,12 @@ public class Snake {
         length++;
     }
 
-    public void eatFood(){
+    public void eatFood() {
         addLength();
     }
 
-    public void die() { isAlive = false; }
+    public void die() {
+        isAlive = false;
+    }
 
 }

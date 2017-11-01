@@ -1,15 +1,9 @@
 package snake;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.*;
 
 public class Game extends JFrame{
-
-    private JButton buttonRandom;
-    private JButton buttonRedactor;
-    private JButton buttonOpen;
 
     public Game() {
         setTitle("Snake");

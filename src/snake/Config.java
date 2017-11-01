@@ -11,8 +11,8 @@ public class Config implements Serializable{
     private int windowWidth;
     private int timerTick;
     private Color textColor;
-    private Color buttonBord;
-    private Color background;
+    private Color buttonBordColor;
+    private Color backgroundColor;
     private Font font;
 
     public Config(int width, int height, int pixel, int tick){
@@ -23,8 +23,8 @@ public class Config implements Serializable{
         windowWidth = fieldWidth * pixelSize + 285;
         timerTick = tick;
         textColor = Color.GREEN;
-        buttonBord = Color.GREEN;
-        background = Color.BLACK;
+        buttonBordColor = Color.GREEN;
+        backgroundColor = Color.BLACK;
         font = new Font("Comic Sans MS", Font.BOLD, 20);
     }
 
@@ -52,12 +52,12 @@ public class Config implements Serializable{
         return timerTick;
     }
 
-    public Color getBackground() {
-        return background;
+    public Color getBackgroundColor() {
+        return backgroundColor;
     }
 
-    public Color getButtonBord() {
-        return buttonBord;
+    public Color getButtonBordColor() {
+        return buttonBordColor;
     }
 
     public Font getFont() {

@@ -9,24 +9,22 @@ import java.util.HashSet;
 
 
 public class LevelRedactor extends JPanel implements Serializable{
-    private int WIDTH;
-    private int HEIGHT;
-    private int PIXEL;
+    private int width;
+    private int height;
+    private int pixel;
     private Point location;
     private Image bush;
     private HashSet maze;
-    private Config CONFIG;
     private Level level;
 
     public LevelRedactor(Config config){
-        WIDTH = config.getFieldWidth();
-        HEIGHT = config.getFieldHeight();
-        PIXEL = config.getPixelSize();
-        CONFIG = config;
+        width = config.getFieldWidth();
+        height = config.getFieldHeight();
+        pixel = config.getPixelSize();
         maze = new HashSet();
         location = new Point(0, 0);
         level = new Level(config, "level");
-        setBackground(Color.black);
+        setBackground(config.getBackgroundColor());
         loadImages();
         addKeyListener(new FieldKeyListener());
         setFocusable(true);
@@ -74,18 +72,18 @@ public class LevelRedactor extends JPanel implements Serializable{
         /*
         Iterator iterator = maze.iterator();
         while (iterator.hasNext()){
-            g.drawImage(bush,((Wall) iterator.next()).getLocation().x * PIXEL,
-                    ((Wall) iterator.next()).getLocation().y * PIXEL,this);
+            g.drawImage(bush,((Wall) iterator.next()).getLocation().x * pixel,
+                    ((Wall) iterator.next()).getLocation().y * pixel,this);
         }*/
         Wall[] arr = (Wall[])maze.toArray(new Wall[maze.size()]);
         for (Wall wall : arr){
-            g.drawImage(bush, wall.getLocation().x * PIXEL,
-                    wall.getLocation().y * PIXEL,this);
+            g.drawImage(bush, wall.getLocation().x * pixel,
+                    wall.getLocation().y * pixel,this);
         }
         g.setColor(Color.cyan);
-        g.drawRect(location.x*PIXEL,location.y*PIXEL,PIXEL,PIXEL);
+        g.drawRect(location.x* pixel,location.y* pixel, pixel, pixel);
         g.setColor(Color.green);
-        g.drawRect(0,0,WIDTH*PIXEL,HEIGHT*PIXEL);
+        g.drawRect(0,0, width * pixel, height * pixel);
     }
 
     public class FieldKeyListener extends KeyAdapter {
@@ -96,23 +94,17 @@ public class LevelRedactor extends JPanel implements Serializable{
             if (key == KeyEvent.VK_LEFT && getLocation().x > 0) {
                 setLocation(--location.x, location.y);
             }
-            if (key == KeyEvent.VK_RIGHT && getLocation().x < WIDTH - 1) {
+            if (key == KeyEvent.VK_RIGHT && getLocation().x < width - 1) {
                 setLocation(++location.x, location.y);
             }
             if (key == KeyEvent.VK_UP && getLocation().y > 0) {
                 setLocation(location.x, --location.y);
             }
-            if (key == KeyEvent.VK_DOWN && getLocation().y < HEIGHT - 1) {
+            if (key == KeyEvent.VK_DOWN && getLocation().y < height - 1) {
                 setLocation(location.x, ++location.y);
             }
             if (key == KeyEvent.VK_SPACE){
                 addNewWall();
-            }
-            if (key == KeyEvent.VK_ENTER){
-                //GameField first = new GameField(CONFIG);
-                //GameField.main(null);
-                //Level lvl = new Level(config, "new Level");
-                //Game.serialize(lvl, "new Level");
             }
             repaint();
         }

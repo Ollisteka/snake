@@ -27,16 +27,19 @@ public class RedactorWindow extends JFrame {
 
         layout = new GroupLayout(getContentPane());
 
-        setBackground(config.getBackground());
-        getContentPane().setBackground(config.getBackground());
+        setBackground(config.getBackgroundColor());
+        getContentPane().setBackground(config.getBackgroundColor());
 
-        setUpButtons(config.getBackground(), config.getButtonBord(),
-                config.getTextColor(), config.getFont());
+        setUpButtons(config.getBackgroundColor(),
+                config.getButtonBordColor(),
+                config.getTextColor(),
+                config.getFont());
         setRedactorLayout();
         //pack();
     }
 
-    private void setUpButtons(Color background, Color buttonBorderColor, Color TextColor, Font font){
+    private void setUpButtons(Color background, Color buttonBorderColor,
+                              Color TextColor, Font font){
         buttonGame = new JButton(" Start with this maze ");
         buttonSave = new JButton(" Save this level ");
 
