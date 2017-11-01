@@ -1,11 +1,9 @@
-package Tests;
+package tests;
 
 import org.junit.Test;
-import org.junit.Assert;
 import snake.*;
 
 import java.awt.*;
-import java.util.HashSet;
 
 import static org.junit.Assert.*;
 

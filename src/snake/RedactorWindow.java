@@ -105,7 +105,7 @@ public class RedactorWindow extends JFrame {
     private void saveActionPerformed(ActionEvent evt) throws IOException {
         Config config = new Config(25, 25, 25, 250);
         Level level = redactor.getLevel();
-        Game.serialize(level, "level");
+        Game.serialize(level);
         // Здесь надо вытащить уровень с redactor (поле этого же класса)
         // и сохранить
         // можно потом снова вызвать окно меню

@@ -5,6 +5,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
@@ -95,13 +96,12 @@ public class Menu extends JFrame{
     private void uploadActionPerformed(ActionEvent evt) {
         Config config = new Config(25, 25, 25, 250);
         try{
-            Level level = Game.deserialize("level");
+            Game game = new Game();
+            Level level = game.deserialize();
             new NewGame(config, level).setVisible(true);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             new Menu().setVisible(true);
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             new Menu().setVisible(true);
         }
         this.dispose();

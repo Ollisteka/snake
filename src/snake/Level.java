@@ -3,22 +3,23 @@ package snake;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Level implements Serializable {
     private int width;
     private int height;
     private String levelName;
-    private HashSet<Wall> mazeLocations;
+    private Set<Wall> mazeLocations;
 
     public String getLevelName() {
         return levelName;
     }
 
-    public HashSet<Wall> getMazeLocations() {
+    public Set<Wall> getMazeLocations() {
         return mazeLocations;
     }
 
-    public void setMazeLocations(HashSet<Wall> maze){
+    public void setMazeLocations(Set<Wall> maze){
         mazeLocations = maze;
     }
 
@@ -29,8 +30,8 @@ public class Level implements Serializable {
         height = config.getFieldHeight();
     }
 
-    public HashSet createRandomField(){
-        HashSet maze = new HashSet();
+    public Set<Wall> createRandomField(){
+        Set<Wall> maze = new HashSet();
         for (int x = 0; x < width; x++){
             for (int y = 0; y < height; y++){
                 if (new Random().nextInt(50) == 0)
