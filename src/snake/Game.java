@@ -47,7 +47,7 @@ public class Game extends JFrame{
                     str += ".";
                 }
             }
-            str += '\n';
+            str += "\r\n";
         }
         return str;
     }
