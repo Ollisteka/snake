@@ -1,70 +1,72 @@
 package snake;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.Serializable;
 
-public class Config implements Serializable{
-    private int fieldWidth;
-    private int fieldHeight;
-    private int pixelSize;
-    private int windowHeight;
-    private int windowWidth;
-    private int timerTick;
-    private Color textColor;
-    private Color buttonBordColor;
-    private Color backgroundColor;
-    private Font font;
+public class Config implements Serializable {
 
-    public Config(int width, int height, int pixel, int tick){
-        fieldWidth = width;
-        fieldHeight = height;
-        pixelSize = pixel;
-        windowHeight = fieldHeight * pixelSize + 85;
-        windowWidth = fieldWidth * pixelSize + 285;
-        timerTick = tick;
-        textColor = Color.GREEN;
-        buttonBordColor = Color.GREEN;
-        backgroundColor = Color.BLACK;
-        font = new Font("Comic Sans MS", Font.BOLD, 20);
-    }
+  private int fieldWidth;
+  private int fieldHeight;
+  private int pixelSize;
+  private int windowHeight;
+  private int windowWidth;
+  private int timerTick;
+  private Color textColor;
+  private Color buttonBordColor;
+  private Color backgroundColor;
+  private Font font;
 
-    public int getFieldWidth(){
-        return fieldWidth;
-    }
+  public Config(int width, int height, int pixel, int tick) {
+    fieldWidth = width;
+    fieldHeight = height;
+    pixelSize = pixel;
+    windowHeight = fieldHeight * pixelSize + 85;
+    windowWidth = fieldWidth * pixelSize + 285;
+    timerTick = tick;
+    textColor = Color.GREEN;
+    buttonBordColor = Color.GREEN;
+    backgroundColor = Color.BLACK;
+    font = new Font("Comic Sans MS", Font.BOLD, 20);
+  }
 
-    public int getFieldHeight(){
-        return fieldHeight;
-    }
+  public int getFieldWidth() {
+    return fieldWidth;
+  }
 
-    public int getPixelSize(){
-        return pixelSize;
-    }
+  public int getFieldHeight() {
+    return fieldHeight;
+  }
 
-    public int getWindowHeight(){
-        return windowHeight;
-    }
+  public int getPixelSize() {
+    return pixelSize;
+  }
 
-    public int getWindowWidth() {
-        return windowWidth;
-    }
+  public int getWindowHeight() {
+    return windowHeight;
+  }
 
-    public int getTimerTick() {
-        return timerTick;
-    }
+  public int getWindowWidth() {
+    return windowWidth;
+  }
 
-    public Color getBackgroundColor() {
-        return backgroundColor;
-    }
+  public int getTimerTick() {
+    return timerTick;
+  }
 
-    public Color getButtonBordColor() {
-        return buttonBordColor;
-    }
+  public Color getBackgroundColor() {
+    return backgroundColor;
+  }
 
-    public Font getFont() {
-        return font;
-    }
+  public Color getButtonBordColor() {
+    return buttonBordColor;
+  }
 
-    public Color getTextColor() {
-        return textColor;
-    }
+  public Font getFont() {
+    return font;
+  }
+
+  public Color getTextColor() {
+    return textColor;
+  }
 }

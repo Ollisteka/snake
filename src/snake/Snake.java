@@ -1,92 +1,94 @@
 package snake;
 
 public class Snake {
-    private int length;
-    private boolean right;
-    private boolean left;
-    private boolean up;
-    private boolean down;
-    private boolean isAlive;
 
-    public Snake()
-    {
-        length = 2;
-        right = true;
-        isAlive = true;
-    }
+  private int length;
+  private boolean right;
+  private boolean left;
+  private boolean up;
+  private boolean down;
+  private boolean isAlive;
 
-    public int getLength() {
-        return length;
-    }
-    public void setLength(int newLength){
-        length = newLength;
-    }
+  public Snake() {
+    length = 2;
+    right = true;
+    isAlive = true;
+  }
 
-    public boolean looksRight(){
-        return right;
-    }
+  public int getLength() {
+    return length;
+  }
 
-    public boolean looksLeft(){
-        return left;
-    }
+  public void setLength(int newLength) {
+    length = newLength;
+  }
 
-    public boolean looksUp(){
-        return up;
-    }
+  public boolean looksRight() {
+    return right;
+  }
 
-    public boolean looksDown(){
-        return down;
-    }
+  public boolean looksLeft() {
+    return left;
+  }
 
-    public boolean isAlive(){
-        return isAlive;
-    }
+  public boolean looksUp() {
+    return up;
+  }
 
-    public void moveRight(){
-        if (!left) {
-            right = true;
-            left = false;
-            up = false;
-            down = false;
-        }
-    }
+  public boolean looksDown() {
+    return down;
+  }
 
-    public void moveUp() {
-        if (!down) {
-            up = true;
-            left = false;
-            right = false;
-            down = false;
-        }
-    }
+  public boolean isAlive() {
+    return isAlive;
+  }
 
-    public void moveDown() {
-        if (!down) {
-            down = true;
-            left = false;
-            up = false;
-            right = false;
-        }
+  public void moveRight() {
+    if (!left) {
+      right = true;
+      left = false;
+      up = false;
+      down = false;
     }
-    public void moveLeft() {
-        if (!right) {
-            left = true;
-            right = false;
-            up = false;
-            down = false;
-        }
-    }
+  }
 
-    public void addLength() {
-        length++;
+  public void moveUp() {
+    if (!down) {
+      up = true;
+      left = false;
+      right = false;
+      down = false;
     }
+  }
 
-    public void eatFood() {
-        addLength();
+  public void moveDown() {
+    if (!down) {
+      down = true;
+      left = false;
+      up = false;
+      right = false;
     }
+  }
 
-    public void die() {
-        isAlive = false;
+  public void moveLeft() {
+    if (!right) {
+      left = true;
+      right = false;
+      up = false;
+      down = false;
     }
+  }
+
+  public void addLength() {
+    length++;
+  }
+
+  public void eatFood() {
+    addLength();
+  }
+
+  public void die() {
+    isAlive = false;
+  }
 
 }

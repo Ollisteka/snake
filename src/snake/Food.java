@@ -1,23 +1,24 @@
 package snake;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Random;
 
-public class Food
-{
-    private Point location;
-    public Point getLocation() {
-        return location;
-    }
+public class Food {
 
-    public Food(int width, int height) {
-        location = new Point();
-        createFood(width, height);
-    }
+  private Point location;
 
-    public void createFood(int width, int height) {
-        int X = new Random().nextInt(width);
-        int Y = new Random().nextInt(height);
-        location = new Point(X, Y);
-    }
+  public Food(int width, int height) {
+    location = new Point();
+    createFood(width, height);
+  }
+
+  public Point getLocation() {
+    return location;
+  }
+
+  public void createFood(int width, int height) {
+    int X = new Random().nextInt(width);
+    int Y = new Random().nextInt(height);
+    location = new Point(X, Y);
+  }
 }
