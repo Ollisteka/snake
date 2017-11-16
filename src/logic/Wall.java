@@ -9,9 +9,6 @@ public class Wall implements Serializable {
 
   public Wall(int width, int height) {
     location = new Point(width, height);
-
-    //new Wall().equals(new Wall())
-
   }
 
   public Point getLocation() {

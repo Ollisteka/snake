@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
+import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -35,6 +36,7 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
   private Snake snake;
   private Level level;
   private GameWindow parent;
+  private Random rnd = new Random();
 
   public GameFieldPanel(Config config, Level currentLevel, GameWindow parent) {
     width = config.getFieldWidth();
@@ -42,11 +44,11 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
     pixel = config.getPixelSize();
     timer = new Timer(config.getTimerTick(), this);
     setBackground(config.getBackgroundColor());
+    level = currentLevel;
     initGame();
     loadImages();
     addKeyListener(new FieldKeyListener());
     setFocusable(true);
-    level = currentLevel;
     this.parent = parent;
   }
   public GameFieldPanel(Config config, Level currentLevel) {
@@ -55,11 +57,11 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
     pixel = config.getPixelSize();
     timer = new Timer(config.getTimerTick(), this);
     setBackground(config.getBackgroundColor());
+    level = currentLevel;
     initGame();
     loadImages();
     addKeyListener(new FieldKeyListener());
     setFocusable(true);
-    level = currentLevel;
   }
 
   public Point[] getSnakeLocations() {
@@ -75,11 +77,29 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
 
   private void initGame() {
     snake = new Snake();
-    food = new Food(width, height);
+    food = new Food(width, height, level.getMazeLocations());
+    placeSnake();
     timer.start();
+  }
+
+  private void placeSnake() {
     snakeLocations = new Point[height * width];
-    snakeLocations[0] = new Point(1, 0);
-    snakeLocations[1] = new Point(0, 0);
+    while (true) {
+      int x = rnd.nextInt(width - 1);
+      int y = rnd.nextInt(height - 1);
+      boolean repeat = false;
+      for (Wall wall : level.getMazeLocations()) {
+        if (wall.getLocation() == new Point(x, y)) {
+          repeat = true;
+          break;
+        }
+      }
+      if (repeat) {
+        continue;
+      }
+      snakeLocations[0] = new Point(x, y);
+      break;
+    }
   }
 
 
@@ -106,7 +126,7 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
   private void loadImages() {
     ImageIcon f = new ImageIcon("food.png");
     foodIm = f.getImage();
-    ImageIcon s = new ImageIcon("logic.png");
+    ImageIcon s = new ImageIcon("snake.png");
     snakeIm = s.getImage();
     ImageIcon g = new ImageIcon("gameOver.jpg");
     gameOver = g.getImage();
@@ -158,13 +178,13 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
       snake.eatFood();
       int i = snake.getLength() - 1;
       snakeLocations[i] = new Point(snakeLocations[i - 1].x, snakeLocations[i - 1].y);
-      food.createFood(width, height);
+      food.createFood(width, height, level.getMazeLocations());
       int count = 0;
       while (count < level.getMazeLocations().size()) {
         for (Wall wall : level.getMazeLocations()) {
           if (wall.getLocation().x == food.getLocation().x &&
               wall.getLocation().y == food.getLocation().y) {
-            food.createFood(width, height);
+            food.createFood(width, height, level.getMazeLocations());
             count = 0;
           }
           count++;
