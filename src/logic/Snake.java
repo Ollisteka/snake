@@ -1,4 +1,4 @@
-package snake;
+package logic;
 
 public class Snake {
 

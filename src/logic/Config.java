@@ -1,4 +1,4 @@
-package snake;
+package logic;
 
 import java.awt.Color;
 import java.awt.Font;

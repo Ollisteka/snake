@@ -1,16 +1,18 @@
-package snake;
+package GUI;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import logic.Config;
+import logic.Level;
 
-public class NewGame extends JFrame {
+public class GameWindow extends JFrame {
 
-  public NewGame(Config config, Level level) {
+  public GameWindow(Config config, Level level) {
     setTitle("Snake");
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setSize(config.getWindowWidth(), config.getWindowHeight());
     setLocation(100, 100);
-    GameField field = new GameField(config, level, this);
+    GameFieldPanel field = new GameFieldPanel(config, level, this);
     add(field);
     setVisible(true);
   }

@@ -1,4 +1,4 @@
-package snake;
+package GUI;
 
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
@@ -12,15 +12,18 @@ import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
+import logic.Config;
+import logic.Game;
+import logic.Level;
 
-public class Menu extends JFrame {
+public class MenuWindow extends JFrame {
 
   private JButton buttonRandom;
   private JButton buttonRedactor;
   private JButton buttonOpen;
   private GroupLayout layout;
 
-  public Menu() {
+  public MenuWindow() {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setLocation(600, 400);
     setTitle("Snake: menu");
@@ -93,7 +96,7 @@ public class Menu extends JFrame {
 
   private void createActionPerformed(ActionEvent evt) {
     this.dispose();
-    new RedactorWindow().setVisible(true);
+    new LevelEditorWindow().setVisible(true);
   }
 
   private void uploadActionPerformed(ActionEvent evt) {
@@ -101,11 +104,11 @@ public class Menu extends JFrame {
     try {
       Game game = new Game();
       Level level = game.deserialize();
-      new NewGame(config, level).setVisible(true);
+      new GameWindow(config, level).setVisible(true);
     } catch (IOException e) {
-      new Menu().setVisible(true);
+      new MenuWindow().setVisible(true);
     } catch (ClassNotFoundException e) {
-      new Menu().setVisible(true);
+      new MenuWindow().setVisible(true);
     }
     this.dispose();
   }
@@ -115,6 +118,6 @@ public class Menu extends JFrame {
     Level level = new Level(config, "Random");
     level.setMazeLocations(level.createRandomField());
     this.dispose();
-    new NewGame(config, level).setVisible(true);
+    new GameWindow(config, level).setVisible(true);
   }
 }

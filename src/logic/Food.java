@@ -1,4 +1,4 @@
-package snake;
+package logic;
 
 import java.awt.Point;
 import java.util.Random;

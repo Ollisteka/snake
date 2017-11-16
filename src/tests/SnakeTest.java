@@ -1,7 +1,7 @@
 package tests;
 
 import org.junit.Test;
-import snake.Snake;
+import logic.Snake;
 import static junit.framework.Assert.*;
 
 public class SnakeTest {

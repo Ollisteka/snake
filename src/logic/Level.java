@@ -1,4 +1,4 @@
-package snake;
+package logic;
 
 import java.io.Serializable;
 import java.util.HashSet;

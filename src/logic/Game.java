@@ -1,6 +1,7 @@
-package snake;
+package logic;
 
 
+import GUI.MenuWindow;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,7 +28,7 @@ public class Game extends JFrame {
 
   public static void main(String[] args) {
 
-    new Menu().setVisible(true);
+    new MenuWindow().setVisible(true);
   }
 
   private static ArrayList<String> readLines(String filePath) {

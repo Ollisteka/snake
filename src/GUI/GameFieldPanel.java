@@ -1,4 +1,4 @@
-package snake;
+package GUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,13 +9,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
-import java.security.Key;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import sun.rmi.runtime.NewThreadAction;
+import logic.Config;
+import logic.Food;
+import logic.Level;
+import logic.Snake;
+import logic.Wall;
 
-public class GameField extends JPanel implements ActionListener, Serializable {
+public class GameFieldPanel extends JPanel implements ActionListener, Serializable {
 
   private int width;
   private int height;
@@ -31,9 +34,9 @@ public class GameField extends JPanel implements ActionListener, Serializable {
   private Point[] snakeLocations;
   private Snake snake;
   private Level level;
-  private NewGame parent;
+  private GameWindow parent;
 
-  public GameField(Config config, Level currentLevel, NewGame parent) {
+  public GameFieldPanel(Config config, Level currentLevel, GameWindow parent) {
     width = config.getFieldWidth();
     height = config.getFieldHeight();
     pixel = config.getPixelSize();
@@ -46,7 +49,7 @@ public class GameField extends JPanel implements ActionListener, Serializable {
     level = currentLevel;
     this.parent = parent;
   }
-  public GameField(Config config, Level currentLevel) {
+  public GameFieldPanel(Config config, Level currentLevel) {
     width = config.getFieldWidth();
     height = config.getFieldHeight();
     pixel = config.getPixelSize();
@@ -103,7 +106,7 @@ public class GameField extends JPanel implements ActionListener, Serializable {
   private void loadImages() {
     ImageIcon f = new ImageIcon("food.png");
     foodIm = f.getImage();
-    ImageIcon s = new ImageIcon("snake.png");
+    ImageIcon s = new ImageIcon("logic.png");
     snakeIm = s.getImage();
     ImageIcon g = new ImageIcon("gameOver.jpg");
     gameOver = g.getImage();
@@ -223,10 +226,7 @@ public class GameField extends JPanel implements ActionListener, Serializable {
         }
       }
       if (key == KeyEvent.VK_M){
-        new Menu().setVisible(true);
-        parent.dispose();
-      }
-      if (key == KeyEvent.VK_ESCAPE){
+        new MenuWindow().setVisible(true);
         parent.dispose();
       }
     }

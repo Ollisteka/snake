@@ -1,4 +1,4 @@
-package snake;
+package GUI;
 
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 
@@ -12,22 +12,25 @@ import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
+import logic.Config;
+import logic.Game;
+import logic.Level;
 
-public class RedactorWindow extends JFrame {
+public class LevelEditorWindow extends JFrame {
 
   private GroupLayout layout;
   private JButton buttonGame;
   private JButton buttonSave;
-  private LevelRedactor redactor;
+  private LevelEditorPanel redactor;
 
-  public RedactorWindow() {
+  public LevelEditorWindow() {
     setTitle("Snake: redactor");
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     Config config = new Config(25, 25, 25, 250);
     setSize(config.getWindowWidth(), config.getWindowHeight());
     setLocation(100, 100);
-    redactor = new LevelRedactor(config);
+    redactor = new LevelEditorPanel(config);
     redactor.setVisible(true);
 
     layout = new GroupLayout(getContentPane());
@@ -101,10 +104,10 @@ public class RedactorWindow extends JFrame {
     Config config = new Config(25, 25, 25, 250);
     Level level = redactor.getLevel();
 
-    new NewGame(config, level).setVisible(true);
+    new GameWindow(config, level).setVisible(true);
     // Здесь надо вытащить уровень с redactor (поле этого же класса)
-    // а потом запихнуть его в GameField
-    //new GameField(config, ).setVisible(true);
+    // а потом запихнуть его в GameFieldPanel
+    //new GameFieldPanel(config, ).setVisible(true);
   }
 
   private void saveActionPerformed(ActionEvent evt) throws IOException {
@@ -116,7 +119,7 @@ public class RedactorWindow extends JFrame {
     // и сохранить
     // можно потом снова вызвать окно меню
     this.dispose();
-    new Menu().setVisible(true);
+    new MenuWindow().setVisible(true);
 
   }
 }

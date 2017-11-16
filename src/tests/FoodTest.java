@@ -2,8 +2,8 @@ package tests;
 
 import org.junit.Test;
 import org.junit.Assert;
-import snake.Config;
-import snake.Food;
+import logic.Config;
+import logic.Food;
 
 public class FoodTest extends Assert{
 

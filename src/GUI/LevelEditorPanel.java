@@ -1,4 +1,4 @@
-package snake;
+package GUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,9 +10,12 @@ import java.io.Serializable;
 import java.util.HashSet;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import logic.Config;
+import logic.Level;
+import logic.Wall;
 
 
-public class LevelRedactor extends JPanel implements Serializable {
+public class LevelEditorPanel extends JPanel implements Serializable {
 
   private int width;
   private int height;
@@ -22,7 +25,7 @@ public class LevelRedactor extends JPanel implements Serializable {
   private HashSet maze;
   private Level level;
 
-  public LevelRedactor(Config config) {
+  public LevelEditorPanel(Config config) {
     width = config.getFieldWidth();
     height = config.getFieldHeight();
     pixel = config.getPixelSize();
