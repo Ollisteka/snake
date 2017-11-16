@@ -10,7 +10,7 @@ public class NewGame extends JFrame {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setSize(config.getWindowWidth(), config.getWindowHeight());
     setLocation(100, 100);
-    GameField field = new GameField(config, level);
+    GameField field = new GameField(config, level, this);
     add(field);
     setVisible(true);
   }

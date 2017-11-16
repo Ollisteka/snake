@@ -9,9 +9,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
+import java.security.Key;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import sun.rmi.runtime.NewThreadAction;
 
 public class GameField extends JPanel implements ActionListener, Serializable {
 
@@ -29,7 +31,21 @@ public class GameField extends JPanel implements ActionListener, Serializable {
   private Point[] snakeLocations;
   private Snake snake;
   private Level level;
+  private NewGame parent;
 
+  public GameField(Config config, Level currentLevel, NewGame parent) {
+    width = config.getFieldWidth();
+    height = config.getFieldHeight();
+    pixel = config.getPixelSize();
+    timer = new Timer(config.getTimerTick(), this);
+    setBackground(config.getBackgroundColor());
+    initGame();
+    loadImages();
+    addKeyListener(new FieldKeyListener());
+    setFocusable(true);
+    level = currentLevel;
+    this.parent = parent;
+  }
   public GameField(Config config, Level currentLevel) {
     width = config.getFieldWidth();
     height = config.getFieldHeight();
@@ -205,6 +221,13 @@ public class GameField extends JPanel implements ActionListener, Serializable {
           isPause = true;
           timer.stop();
         }
+      }
+      if (key == KeyEvent.VK_M){
+        new Menu().setVisible(true);
+        parent.dispose();
+      }
+      if (key == KeyEvent.VK_ESCAPE){
+        parent.dispose();
       }
     }
   }
