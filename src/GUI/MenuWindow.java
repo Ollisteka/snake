@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -39,7 +40,15 @@ public class MenuWindow extends JFrame {
     setBackground(Color.BLACK);
     getContentPane().setBackground(Color.BLACK);
 
-    buttonRandom.addActionListener(evt -> randomActionPerformed(evt));
+    buttonRandom.addActionListener(evt -> {
+      try {
+        startNewStory(evt);
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
+    });
     buttonOpen.addActionListener(evt -> uploadActionPerformed(evt));
     buttonRedactor.addActionListener(evt -> createActionPerformed(evt));
 
@@ -102,12 +111,9 @@ public class MenuWindow extends JFrame {
   private void uploadActionPerformed(ActionEvent evt) {
     Config config = new Config(25, 25, 25, 250);
     try {
-      Game game = new Game();
-      Level level = game.deserialize();
+      Level level = Game.deserialize();
       new GameWindow(config, level).setVisible(true);
-    } catch (IOException e) {
-      new MenuWindow().setVisible(true);
-    } catch (ClassNotFoundException e) {
+    } catch (IOException | ClassNotFoundException e) {
       new MenuWindow().setVisible(true);
     }
     this.dispose();
@@ -119,5 +125,22 @@ public class MenuWindow extends JFrame {
     level.setMazeLocations(level.createRandomField());
     this.dispose();
     new GameWindow(config, level).setVisible(true);
+  }
+
+  private void startNewStory(ActionEvent evt) throws IOException, ClassNotFoundException {
+    Config config = new Config(25, 25, 25, 250);
+    ArrayList<Level> levels = new ArrayList<>();
+    ArrayList<String> levelsNames = new ArrayList<>();
+    levelsNames.add("Level_0.txt");
+    levelsNames.add("Level_1.txt");
+    levelsNames.add("Level_2.txt");
+    levelsNames.add("Level_3.txt");
+
+    for (int i = 0; i < levelsNames.size(); i++) {
+      String levelName = levelsNames.get(i);
+      levels.add(Game.deserialize(levelName));
+    }
+    this.dispose();
+    new GameWindow(levels, config).setVisible(true);
   }
 }

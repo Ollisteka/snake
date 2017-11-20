@@ -72,7 +72,7 @@ public class Game extends JFrame {
     return str;
   }
 
-  public Level deserialize() throws IOException, ClassNotFoundException {
+  public static Level deserialize() throws IOException, ClassNotFoundException {
     ArrayList<String> list = findOutFiles();
     Pattern p = Pattern.compile("Level_\\d\\d\\d\\d-\\d\\d-\\d\\d_\\d\\d-\\d\\d\\.txt");
     String level = "A";
@@ -89,7 +89,12 @@ public class Game extends JFrame {
 
   }
 
-  private Level convertIntoLevel(ArrayList<String> lines) {
+  public static Level deserialize(String filename) throws IOException, ClassNotFoundException {
+    ArrayList<String> lines = readLines(filename);
+    return convertIntoLevel(lines);
+  }
+
+  private static Level convertIntoLevel(ArrayList<String> lines) {
     int i = 0;
     Set<Wall> maze = new HashSet<>();
     int width = 0;
@@ -108,7 +113,7 @@ public class Game extends JFrame {
     return level;
   }
 
-  public ArrayList<String> findOutFiles() {
+  public static ArrayList<String> findOutFiles() {
     File dir = new File(".");
     File[] filesList = dir.listFiles();
     ArrayList fileL = new ArrayList();

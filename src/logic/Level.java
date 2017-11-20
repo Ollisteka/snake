@@ -4,10 +4,13 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import lombok.Getter;
 
 public class Level implements Serializable {
 
+  @Getter
   private int width;
+  @Getter
   private int height;
   private String levelName;
   private Set<Wall> mazeLocations;

@@ -4,22 +4,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.Serializable;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 import logic.Config;
 import logic.Food;
 import logic.Level;
 import logic.Snake;
 import logic.Wall;
+import lombok.Getter;
+import lombok.Setter;
 
-public class GameFieldPanel extends JPanel implements ActionListener, Serializable {
+public class GameFieldPanel extends JPanel implements Serializable {
 
   private int width;
   private int height;
@@ -29,10 +26,12 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
   private Image gameOver;
   private Image wallIm;
   private Image headIm;
-  private Timer timer;
   private Food food;
+  @Getter
+  @Setter
   private boolean isPause = false;
   private Point[] snakeLocations;
+  @Getter
   private Snake snake;
   private Level level;
   private GameWindow parent;
@@ -42,12 +41,12 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
     width = config.getFieldWidth();
     height = config.getFieldHeight();
     pixel = config.getPixelSize();
-    timer = new Timer(config.getTimerTick(), this);
+
     setBackground(config.getBackgroundColor());
     level = currentLevel;
     initGame();
     loadImages();
-    addKeyListener(new FieldKeyListener());
+
     setFocusable(true);
     this.parent = parent;
   }
@@ -55,12 +54,12 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
     width = config.getFieldWidth();
     height = config.getFieldHeight();
     pixel = config.getPixelSize();
-    timer = new Timer(config.getTimerTick(), this);
+
     setBackground(config.getBackgroundColor());
     level = currentLevel;
     initGame();
     loadImages();
-    addKeyListener(new FieldKeyListener());
+
     setFocusable(true);
   }
 
@@ -79,7 +78,6 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
     snake = new Snake();
     food = new Food(width, height, level.getMazeLocations());
     placeSnake();
-    timer.start();
   }
 
   private void placeSnake() {
@@ -122,7 +120,6 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
     }
   }
 
-
   private void loadImages() {
     ImageIcon f = new ImageIcon("food.png");
     foodIm = f.getImage();
@@ -151,7 +148,6 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
       }
     } else {
       g.drawImage(gameOver, width / 2 * pixel - 420, height / 2 * pixel - 240, this);
-      timer.stop();
     }
     g.setColor(Color.green);
     g.drawLine(0, 0, width * pixel, 0);
@@ -164,15 +160,7 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
 
   }
 
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    moveSnake();
-    tryEatFood();
-    repaint();
-  }
-
-  private void tryEatFood() {
+  public void tryEatFood() {
     if (snakeLocations[0].x == food.getLocation().x && snakeLocations[0].y == food
         .getLocation().y) {
       snake.eatFood();
@@ -218,37 +206,5 @@ public class GameFieldPanel extends JPanel implements ActionListener, Serializab
     return false;
   }
 
-  public class FieldKeyListener extends KeyAdapter {
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-      super.keyPressed(e);
-      int key = e.getKeyCode();
-      if (key == KeyEvent.VK_LEFT) {
-        snake.moveLeft();
-      }
-      if (key == KeyEvent.VK_UP) {
-        snake.moveUp();
-      }
-      if (key == KeyEvent.VK_RIGHT) {
-        snake.moveRight();
-      }
-      if (key == KeyEvent.VK_DOWN) {
-        snake.moveDown();
-      }
-      if (key == KeyEvent.VK_SPACE) {
-        if (isPause) {
-          isPause = false;
-          timer.start();
-        } else {
-          isPause = true;
-          timer.stop();
-        }
-      }
-      if (key == KeyEvent.VK_M){
-        new MenuWindow().setVisible(true);
-        parent.dispose();
-      }
-    }
-  }
 }
