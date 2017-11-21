@@ -19,37 +19,39 @@ public class GameWindow extends JFrame implements ActionListener {
   private Timer timer;
 
   public GameWindow(Config config, Level level) {
-    setTitle("Snake");
-    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    setSize(config.getWindowWidth(), config.getWindowHeight());
-    setLocation(100, 100);
-    gamefield = new GameFieldPanel(config, level, this);
+    initWindow(config);
+    gamefield = new GameFieldPanel(config, level);
     add(gamefield);
     setVisible(true);
-    addKeyListener(new FieldKeyListener());
-    timer = new Timer(config.getTimerTick(), this);
-    timer.start();
-    setFocusable(true);
   }
 
   public GameWindow(ArrayList<Level> levels, Config baseConfiguration) {
     this.levels = levels;
     this.baseConfiguration = baseConfiguration;
-    setTitle("Snake");
-    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    setSize(baseConfiguration.getWindowWidth(), baseConfiguration.getWindowHeight());
-    setLocation(100, 100);
-    gamefield = new GameFieldPanel(baseConfiguration, this.levels.get(0), this);
+
+    initWindow(baseConfiguration);
+
+    gamefield = new GameFieldPanel(baseConfiguration, this.levels.get(0));
     add(gamefield);
     setVisible(true);
-    timer = new Timer(baseConfiguration.getTimerTick(), this);
-    addKeyListener(new FieldKeyListener());
+
+  }
+
+  private void initWindow(Config config) {
+    setTitle("Snake");
+    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    setSize(config.getWindowWidth(), config.getWindowHeight());
+    setLocation(100, 100);
+
+    timer = new Timer(config.getTimerTick(), this);
     timer.start();
+
+    addKeyListener(new FieldKeyListener());
     setFocusable(true);
   }
 
   public void changeLevel(int levelNumber) {
-    gamefield = new GameFieldPanel(baseConfiguration, levels.get(levelNumber), this);
+    gamefield = new GameFieldPanel(baseConfiguration, levels.get(levelNumber), gamefield);
     add(gamefield);
   }
 
@@ -87,6 +89,11 @@ public class GameWindow extends JFrame implements ActionListener {
           timer.stop();
         }
       }
+      if (key == KeyEvent.VK_M) {
+        new MenuWindow().setVisible(true);
+        dispose();
+      }
+      //Эти обработчики потом уберём, они для дебага
       if (key == KeyEvent.VK_1) {
         gamefield.setVisible(false);
         changeLevel(1);
@@ -102,10 +109,6 @@ public class GameWindow extends JFrame implements ActionListener {
       if (key == KeyEvent.VK_0) {
         gamefield.setVisible(false);
         changeLevel(0);
-      }
-      if (key == KeyEvent.VK_M) {
-        new MenuWindow().setVisible(true);
-        dispose();
       }
     }
   }

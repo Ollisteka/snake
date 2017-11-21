@@ -20,6 +20,8 @@ import logic.Level;
 public class MenuWindow extends JFrame {
 
   private JButton buttonRandom;
+  //TODO к этой кнопке - метод startNewStory
+  private JButton buttonStory;
   private JButton buttonRedactor;
   private JButton buttonOpen;
   private GroupLayout layout;
@@ -40,15 +42,7 @@ public class MenuWindow extends JFrame {
     setBackground(Color.BLACK);
     getContentPane().setBackground(Color.BLACK);
 
-    buttonRandom.addActionListener(evt -> {
-      try {
-        startNewStory(evt);
-      } catch (IOException e) {
-        e.printStackTrace();
-      } catch (ClassNotFoundException e) {
-        e.printStackTrace();
-      }
-    });
+    buttonRandom.addActionListener(evt -> randomActionPerformed(evt));
     buttonOpen.addActionListener(evt -> uploadActionPerformed(evt));
     buttonRedactor.addActionListener(evt -> createActionPerformed(evt));
 

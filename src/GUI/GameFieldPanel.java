@@ -34,34 +34,34 @@ public class GameFieldPanel extends JPanel implements Serializable {
   @Getter
   private Snake snake;
   private Level level;
-  private GameWindow parent;
   private Random rnd = new Random();
 
-  public GameFieldPanel(Config config, Level currentLevel, GameWindow parent) {
-    width = config.getFieldWidth();
-    height = config.getFieldHeight();
-    pixel = config.getPixelSize();
 
-    setBackground(config.getBackgroundColor());
-    level = currentLevel;
-    initGame();
-    loadImages();
-
-    setFocusable(true);
-    this.parent = parent;
-  }
   public GameFieldPanel(Config config, Level currentLevel) {
+    initGameSettings(config, currentLevel);
+    initGameField();
+  }
+
+  public GameFieldPanel(Config baseConfiguration, Level level, GameFieldPanel previousState) {
+    initGameSettings(baseConfiguration, level);
+    //TODO в этом initGameField размещать змейку так, чтобы она вылазила из входа.
+    //Наверное, для этого ещё movesnake надо как то модифицировать.
+    initGameField(previousState);
+  }
+
+  private void initGameSettings(Config config, Level currentLevel) {
     width = config.getFieldWidth();
     height = config.getFieldHeight();
     pixel = config.getPixelSize();
 
     setBackground(config.getBackgroundColor());
     level = currentLevel;
-    initGame();
+
     loadImages();
 
     setFocusable(true);
   }
+
 
   public Point[] getSnakeLocations() {
     return snakeLocations;
@@ -74,30 +74,23 @@ public class GameFieldPanel extends JPanel implements Serializable {
     }
   }
 
-  private void initGame() {
+  private void initGameField() {
     snake = new Snake();
-    food = new Food(width, height, level.getMazeLocations());
+    food = new Food(level);
+    placeSnake();
+  }
+
+  private void initGameField(GameFieldPanel previousState) {
+    snake = previousState.getSnake();
+    food = new Food(level);
+    //TODO сделать перегрузку для этого метода
     placeSnake();
   }
 
   private void placeSnake() {
+    // потом сделаю, чтобы две клетки змейки размещались на карте, честное слово :)
     snakeLocations = new Point[height * width];
-    while (true) {
-      int x = rnd.nextInt(width - 1);
-      int y = rnd.nextInt(height - 1);
-      boolean repeat = false;
-      for (Wall wall : level.getMazeLocations()) {
-        if (wall.getLocation() == new Point(x, y)) {
-          repeat = true;
-          break;
-        }
-      }
-      if (repeat) {
-        continue;
-      }
-      snakeLocations[0] = new Point(x, y);
-      break;
-    }
+    snakeLocations[0] = level.findFreeSpot();
   }
 
 
@@ -164,20 +157,9 @@ public class GameFieldPanel extends JPanel implements Serializable {
     if (snakeLocations[0].x == food.getLocation().x && snakeLocations[0].y == food
         .getLocation().y) {
       snake.eatFood();
+      food = new Food(level);
       int i = snake.getLength() - 1;
       snakeLocations[i] = new Point(snakeLocations[i - 1].x, snakeLocations[i - 1].y);
-      food.createFood(width, height, level.getMazeLocations());
-      int count = 0;
-      while (count < level.getMazeLocations().size()) {
-        for (Wall wall : level.getMazeLocations()) {
-          if (wall.getLocation().x == food.getLocation().x &&
-              wall.getLocation().y == food.getLocation().y) {
-            food.createFood(width, height, level.getMazeLocations());
-            count = 0;
-          }
-          count++;
-        }
-      }
     }
   }
 
