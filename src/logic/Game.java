@@ -97,11 +97,20 @@ public class Game extends JFrame {
   private static Level convertIntoLevel(ArrayList<String> lines) {
     int i = 0;
     Set<Wall> maze = new HashSet<>();
+    Set<Entrance> entrances = new HashSet<>();
     int width = 0;
     for (String line : lines) {
       for (int j = 0; j < line.length(); j++) {
         if (line.charAt(j) == '#') {
           maze.add(new Wall(j, i));
+        }
+        if (line.charAt(j) == 'e') {
+          //вход\выход из уровня, открытый
+          entrances.add(new Entrance(j, i, true));
+        }
+        if (line.charAt(j) == 'q') {
+          //вход\выход из уровня, закрыт
+          entrances.add(new Entrance(j, i, false));
         }
         width = j;
       }
