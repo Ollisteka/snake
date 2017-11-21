@@ -83,6 +83,7 @@ public class Snake {
   }
 
   public void die() {
+    stopSnake();
     isAlive = false;
   }
 
