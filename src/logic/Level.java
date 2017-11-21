@@ -1,5 +1,6 @@
 package logic;
 
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Random;
@@ -8,6 +9,7 @@ import lombok.Getter;
 
 public class Level implements Serializable {
 
+  Random rnd = new Random();
   @Getter
   private int width;
   @Getter
@@ -44,6 +46,24 @@ public class Level implements Serializable {
       }
     }
     return maze;
+  }
+
+  public Point findFreeSpot() {
+    while (true) {
+      int x = rnd.nextInt(width - 1);
+      int y = rnd.nextInt(height - 1);
+      boolean repeat = false;
+      for (Wall wall : mazeLocations) {
+        if (wall.getLocation().x == x && wall.getLocation().y == y) {
+          repeat = true;
+          break;
+        }
+      }
+      if (repeat) {
+        continue;
+      }
+      return new Point(x, y);
+    }
   }
 
 }

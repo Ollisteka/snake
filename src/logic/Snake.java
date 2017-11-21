@@ -56,6 +56,10 @@ public class Snake {
     }
   }
 
+  public void stopSnake() {
+    left = right = down = up = false;
+  }
+
   public void moveDown() {
     if (!down) {
       down = true;
