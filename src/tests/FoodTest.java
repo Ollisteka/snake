@@ -2,15 +2,18 @@ package tests;
 
 import logic.Config;
 import logic.Food;
+import logic.Level;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class FoodTest extends Assert {
 
+  private String levelName = "test";
   @Test
   public void foodIntoTheField() {
     Config config = new Config(25, 25, 25, 250);
-    Food food = new Food(config.getFieldWidth(), config.getFieldHeight());
+    Level level = new Level(config, levelName);
+    Food food = new Food(level);
     assertTrue(food.getLocation().x >= 0);
     assertTrue(food.getLocation().y >= 0);
     assertTrue(food.getLocation().x < config.getFieldWidth());
@@ -20,19 +23,8 @@ public class FoodTest extends Assert {
   @Test(expected = IllegalArgumentException.class)
   public void foodWithIllegalBounds() {
     Config config = new Config(-1, -1, 25, 250);
-    Food food = new Food(config.getFieldWidth(), config.getFieldHeight());
-  }
-
-  @Test
-  public void foodOutOfTheField() {
-    Config config = new Config(5, 5, 25, 10000);
-    Food food = new Food(100, 100);
-    while (food.getLocation().x < config.getFieldWidth()
-        && food.getLocation().y < config.getFieldHeight()) {
-      food = new Food(100, 100);
-    }
-    assertTrue(food.getLocation().x > config.getFieldWidth()
-        || food.getLocation().y > config.getFieldHeight());
+    Level level = new Level(config, levelName);
+    Food food = new Food(level);
   }
 
 }
