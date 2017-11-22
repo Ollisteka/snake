@@ -1,7 +1,10 @@
 package logic;
 
+import lombok.Getter;
+
 public class Snake {
 
+  @Getter
   private int length;
   private boolean right;
   private boolean left;
@@ -14,13 +17,6 @@ public class Snake {
     isAlive = true;
   }
 
-  public int getLength() {
-    return length;
-  }
-
-  public void setLength(int newLength) {
-    length = newLength;
-  }
 
   public boolean looksRight() {
     return right;

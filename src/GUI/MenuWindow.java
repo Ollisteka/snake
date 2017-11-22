@@ -42,7 +42,15 @@ public class MenuWindow extends JFrame {
     setBackground(Color.BLACK);
     getContentPane().setBackground(Color.BLACK);
 
-    buttonRandom.addActionListener(evt -> randomActionPerformed(evt));
+    buttonRandom.addActionListener(evt -> {
+      try {
+        startNewStory(evt);
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
+    });
     buttonOpen.addActionListener(evt -> uploadActionPerformed(evt));
     buttonRedactor.addActionListener(evt -> createActionPerformed(evt));
 
@@ -130,8 +138,7 @@ public class MenuWindow extends JFrame {
     levelsNames.add("Level_2.txt");
     levelsNames.add("Level_3.txt");
 
-    for (int i = 0; i < levelsNames.size(); i++) {
-      String levelName = levelsNames.get(i);
+    for (String levelName : levelsNames) {
       levels.add(Game.deserialize(levelName));
     }
     this.dispose();

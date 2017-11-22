@@ -6,34 +6,30 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Level implements Serializable {
 
-  Random rnd = new Random();
+  @Getter
+  @Setter
+  Set<Entrance> entrances;
   @Getter
   private int width;
   @Getter
   private int height;
+  private Random rnd = new Random();
+  @Getter
   private String levelName;
+  @Getter
+  @Setter
   private Set<Wall> mazeLocations;
 
   public Level(Config config, String level) {
     levelName = level;
     mazeLocations = new HashSet<>();
+    entrances = new HashSet<>();
     width = config.getFieldWidth();
     height = config.getFieldHeight();
-  }
-
-  public String getLevelName() {
-    return levelName;
-  }
-
-  public Set<Wall> getMazeLocations() {
-    return mazeLocations;
-  }
-
-  public void setMazeLocations(Set<Wall> maze) {
-    mazeLocations = maze;
   }
 
   public Set<Wall> createRandomField() {
@@ -66,4 +62,24 @@ public class Level implements Serializable {
     }
   }
 
+  public Set<Entrance> findOpenEntrances() {
+    Set<Entrance> openedEntrances = new HashSet<>();
+    for (Entrance entry : getEntrances()) {
+      if (entry.isOpen()) {
+        openedEntrances.add(entry);
+      }
+    }
+    return openedEntrances;
+  }
+
+  public Point findEntry(Point snakeHead) {
+    Set<Entrance> openedEntrances = findOpenEntrances();
+    for (Entrance openedEntry : openedEntrances) {
+      Point location = openedEntry.getLocation();
+      if (location.x == snakeHead.x || location.y == snakeHead.y) {
+        return new Point(location.x, location.y);
+      }
+    }
+    return null;
+  }
 }

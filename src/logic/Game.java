@@ -85,16 +85,16 @@ public class Game extends JFrame {
       }
     }
     ArrayList<String> lines = readLines(level);
-    return convertIntoLevel(lines);
+    return convertIntoLevel(lines, "random");
 
   }
 
   public static Level deserialize(String filename) throws IOException, ClassNotFoundException {
     ArrayList<String> lines = readLines(filename);
-    return convertIntoLevel(lines);
+    return convertIntoLevel(lines, filename);
   }
 
-  private static Level convertIntoLevel(ArrayList<String> lines) {
+  private static Level convertIntoLevel(ArrayList<String> lines, String levelName) {
     int i = 0;
     Set<Wall> maze = new HashSet<>();
     Set<Entrance> entrances = new HashSet<>();
@@ -117,8 +117,9 @@ public class Game extends JFrame {
       i++;
     }
     Config config = new Config(width, i, 25, 250);
-    Level level = new Level(config, "level_1");
+    Level level = new Level(config, levelName);
     level.setMazeLocations(maze);
+    level.setEntrances(entrances);
     return level;
   }
 

@@ -9,6 +9,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import logic.Config;
+import logic.Entrance;
 import logic.Food;
 import logic.Level;
 import logic.Snake;
@@ -33,6 +34,7 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private Point[] snakeLocations;
   @Getter
   private Snake snake;
+  @Getter
   private Level level;
   private Random rnd = new Random();
 
@@ -84,7 +86,13 @@ public class GameFieldPanel extends JPanel implements Serializable {
     snake = previousState.getSnake();
     food = new Food(level);
     //TODO сделать перегрузку для этого метода
-    placeSnake();
+    placeSnake(previousState);
+  }
+
+  private void placeSnake(GameFieldPanel previousState) {
+    snakeLocations = new Point[height * width];
+    snakeLocations[0] = level.findEntry(previousState.getSnakeLocations()[0]);
+    moveSnake();
   }
 
   private void placeSnake() {
@@ -93,23 +101,53 @@ public class GameFieldPanel extends JPanel implements Serializable {
     snakeLocations[0] = level.findFreeSpot();
   }
 
+  private int findAllLocations() {
+    int count = 0;
+    for (Point point : snakeLocations) {
+      if (point != null) {
+        count++;
+      }
+    }
+    return count;
+  }
 
   public void moveSnake() {
-    for (int i = snake.getLength() - 1; i > 0; i--) {
+    int snakeOnBoard = findAllLocations();
+    Point tail = null;
+    if (snakeOnBoard != snake.getLength()) {
+      tail =
+          new Point(snakeLocations[snakeOnBoard - 1].x, snakeLocations[snakeOnBoard - 1].y);
+    }
+//    if (snakeOnBoard == snake.getLength()) {
+//      for (int i = snake.getLength() - 1; i > 0; i--) {
+//        snakeLocations[i].x = snakeLocations[i - 1].x;
+//        snakeLocations[i].y = snakeLocations[i - 1].y;
+//      }
+//    }
+//    else{
+    for (int i = snakeOnBoard - 1; i > 0; i--) {
       snakeLocations[i].x = snakeLocations[i - 1].x;
       snakeLocations[i].y = snakeLocations[i - 1].y;
     }
+//    }
+
     if (snake.looksRight()) {
       snakeLocations[0].x++;
+
     }
     if (snake.looksLeft()) {
       snakeLocations[0].x--;
+
     }
     if (snake.looksUp()) {
       snakeLocations[0].y--;
+
     }
     if (snake.looksDown()) {
       snakeLocations[0].y++;
+    }
+    if (snakeOnBoard != snake.getLength()) {
+      snakeLocations[snakeOnBoard] = tail;
     }
   }
 
@@ -129,11 +167,12 @@ public class GameFieldPanel extends JPanel implements Serializable {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
+    int snakeOnBoard = findAllLocations();
     if (!isSnakeDead()) {
       Point location = food.getLocation();
       g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
       g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
-      for (int i = 1; i < snake.getLength(); i++) {
+      for (int i = 1; i < snakeOnBoard; i++) {
         g.drawImage(snakeIm, snakeLocations[i].x * pixel, snakeLocations[i].y * pixel, this);
       }
       for (Wall wall : level.getMazeLocations()) {
@@ -163,8 +202,20 @@ public class GameFieldPanel extends JPanel implements Serializable {
     }
   }
 
+  public boolean canMoveToNextLevel() {
+    for (Entrance entrance : level.getEntrances()) {
+      if (snakeLocations[0].x == entrance.getLocation().x &&
+          snakeLocations[0].y == entrance.getLocation().y) {
+
+        return entrance.isOpen();
+      }
+    }
+    return false;
+  }
+
   public boolean isSnakeDead() {
-    for (int j = 2; j < snake.getLength(); j++) {
+    int snakeOnBoard = findAllLocations();
+    for (int j = 2; j < snakeOnBoard; j++) {
       if (snakeLocations[0].x == snakeLocations[j].x &&
           snakeLocations[0].y == snakeLocations[j].y) {
         snake.die();

@@ -3,18 +3,29 @@ package logic;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.Serializable;
+import lombok.Getter;
 
 public class Config implements Serializable {
 
+  @Getter
   private int fieldWidth;
+  @Getter
   private int fieldHeight;
+  @Getter
   private int pixelSize;
+  @Getter
   private int windowHeight;
+  @Getter
   private int windowWidth;
+  @Getter
   private int timerTick;
+  @Getter
   private Color textColor;
+  @Getter
   private Color buttonBordColor;
+  @Getter
   private Color backgroundColor;
+  @Getter
   private Font font;
 
   public Config(int width, int height, int pixel, int tick) {
@@ -28,45 +39,5 @@ public class Config implements Serializable {
     buttonBordColor = Color.GREEN;
     backgroundColor = Color.BLACK;
     font = new Font("Comic Sans MS", Font.BOLD, 20);
-  }
-
-  public int getFieldWidth() {
-    return fieldWidth;
-  }
-
-  public int getFieldHeight() {
-    return fieldHeight;
-  }
-
-  public int getPixelSize() {
-    return pixelSize;
-  }
-
-  public int getWindowHeight() {
-    return windowHeight;
-  }
-
-  public int getWindowWidth() {
-    return windowWidth;
-  }
-
-  public int getTimerTick() {
-    return timerTick;
-  }
-
-  public Color getBackgroundColor() {
-    return backgroundColor;
-  }
-
-  public Color getButtonBordColor() {
-    return buttonBordColor;
-  }
-
-  public Font getFont() {
-    return font;
-  }
-
-  public Color getTextColor() {
-    return textColor;
   }
 }
