@@ -46,8 +46,6 @@ public class GameFieldPanel extends JPanel implements Serializable {
 
   public GameFieldPanel(Config baseConfiguration, Level level, GameFieldPanel previousState) {
     initGameSettings(baseConfiguration, level);
-    //TODO в этом initGameField размещать змейку так, чтобы она вылазила из входа.
-    //Наверное, для этого ещё movesnake надо как то модифицировать.
     initGameField(previousState);
   }
 
@@ -85,14 +83,14 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private void initGameField(GameFieldPanel previousState) {
     snake = previousState.getSnake();
     food = new Food(level);
-    //TODO сделать перегрузку для этого метода
     placeSnake(previousState);
   }
 
   private void placeSnake(GameFieldPanel previousState) {
+    Point prevSnakeHead = previousState.getSnakeLocations()[0];
+    char inputEntry = previousState.level.getEntranceName(prevSnakeHead);
     snakeLocations = new Point[height * width];
-    snakeLocations[0] = level.findEntry(previousState.getSnakeLocations()[0]);
-    moveSnake();
+    snakeLocations[0] = level.findEntry(inputEntry);
   }
 
   private void placeSnake() {
@@ -114,22 +112,14 @@ public class GameFieldPanel extends JPanel implements Serializable {
   public void moveSnake() {
     int snakeOnBoard = findAllLocations();
     Point tail = null;
-    if (snakeOnBoard != snake.getLength()) {
+    if (snakeOnBoard != snake.getLength() && snakeOnBoard != 0) {
       tail =
           new Point(snakeLocations[snakeOnBoard - 1].x, snakeLocations[snakeOnBoard - 1].y);
     }
-//    if (snakeOnBoard == snake.getLength()) {
-//      for (int i = snake.getLength() - 1; i > 0; i--) {
-//        snakeLocations[i].x = snakeLocations[i - 1].x;
-//        snakeLocations[i].y = snakeLocations[i - 1].y;
-//      }
-//    }
-//    else{
     for (int i = snakeOnBoard - 1; i > 0; i--) {
       snakeLocations[i].x = snakeLocations[i - 1].x;
       snakeLocations[i].y = snakeLocations[i - 1].y;
     }
-//    }
 
     if (snake.looksRight()) {
       snakeLocations[0].x++;
@@ -202,15 +192,19 @@ public class GameFieldPanel extends JPanel implements Serializable {
     }
   }
 
-  public boolean canMoveToNextLevel() {
+  public Entrance canMoveToNextLevel() {
     for (Entrance entrance : level.getEntrances()) {
       if (snakeLocations[0].x == entrance.getLocation().x &&
           snakeLocations[0].y == entrance.getLocation().y) {
 
-        return entrance.isOpen();
+        if (entrance.isOpen()) {
+          return entrance;
+        } else {
+          return null;
+        }
       }
     }
-    return false;
+    return null;
   }
 
   public boolean isSnakeDead() {

@@ -1,6 +1,5 @@
 package GUI;
 
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -60,9 +59,10 @@ public class GameWindow extends JFrame implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (gamefield.canMoveToNextLevel()) {
+    Entrance possibleEntrance = gamefield.canMoveToNextLevel();
+    if (possibleEntrance != null) {
       gamefield.setVisible(false);
-      int nextLevel = findNextLevel();
+      int nextLevel = findNextLevel(possibleEntrance);
       changeLevel(nextLevel);
     }
     gamefield.moveSnake();
@@ -70,8 +70,7 @@ public class GameWindow extends JFrame implements ActionListener {
     repaint();
   }
 
-  private int findNextLevel() {
-    Point snakeHead = gamefield.getSnakeLocations()[0];
+  private int findNextLevel(Entrance inputEntrance) {
     for (int i = 0; i < levels.size(); i++) {
       Level level = levels.get(i);
       if (level == gamefield.getLevel()) {
@@ -79,8 +78,7 @@ public class GameWindow extends JFrame implements ActionListener {
       }
       Set<Entrance> openedEntrances = level.findOpenEntrances();
       for (Entrance openedEntry : openedEntrances) {
-        Point location = openedEntry.getLocation();
-        if (location.x == snakeHead.x || location.y == snakeHead.y) {
+        if (openedEntry.getName() == inputEntrance.getName()) {
           return i;
         }
       }

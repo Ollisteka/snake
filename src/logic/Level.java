@@ -72,14 +72,26 @@ public class Level implements Serializable {
     return openedEntrances;
   }
 
-  public Point findEntry(Point snakeHead) {
+  public Point findEntry(char inputEntry) {
     Set<Entrance> openedEntrances = findOpenEntrances();
     for (Entrance openedEntry : openedEntrances) {
-      Point location = openedEntry.getLocation();
-      if (location.x == snakeHead.x || location.y == snakeHead.y) {
+      if (openedEntry.getName() == inputEntry) {
+        Point location = openedEntry.getLocation();
         return new Point(location.x, location.y);
       }
     }
     return null;
+  }
+
+  public char getEntranceName(Point location) {
+    Set<Entrance> openedEntrances = findOpenEntrances();
+    for (Entrance openedEntry : openedEntrances) {
+      Point entryLocation = openedEntry.getLocation();
+      if (entryLocation.x == location.x && entryLocation.y == location.y) {
+        return openedEntry.getName();
+      }
+    }
+    //дефолтное значение для char
+    return '\u0000';
   }
 }

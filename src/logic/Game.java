@@ -104,13 +104,13 @@ public class Game extends JFrame {
         if (line.charAt(j) == '#') {
           maze.add(new Wall(j, i));
         }
-        if (line.charAt(j) == 'e') {
+        if (Character.isLowerCase(line.charAt(j))) {
           //вход\выход из уровня, открытый
-          entrances.add(new Entrance(j, i, true));
+          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), true));
         }
-        if (line.charAt(j) == 'q') {
+        if (Character.isUpperCase(line.charAt(j))) {
           //вход\выход из уровня, закрыт
-          entrances.add(new Entrance(j, i, false));
+          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), false));
         }
         width = j;
       }
