@@ -13,7 +13,7 @@ public class FoodTest extends Assert {
   public void foodIntoTheField() {
     Config config = new Config(25, 25, 25, 250);
     Level level = new Level(config, levelName);
-    Food food = new Food(level);
+    Food food = level.getFood();
     assertTrue(food.getLocation().x >= 0);
     assertTrue(food.getLocation().y >= 0);
     assertTrue(food.getLocation().x < config.getFieldWidth());
@@ -24,7 +24,7 @@ public class FoodTest extends Assert {
   public void foodWithIllegalBounds() {
     Config config = new Config(-1, -1, 25, 250);
     Level level = new Level(config, levelName);
-    Food food = new Food(level);
+    Food food = level.getFood();
   }
 
 }

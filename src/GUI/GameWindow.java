@@ -57,19 +57,6 @@ public class GameWindow extends JFrame implements ActionListener {
     add(gamefield);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    Entrance possibleEntrance = gamefield.canMoveToNextLevel();
-    if (possibleEntrance != null) {
-      gamefield.setVisible(false);
-      int nextLevel = findNextLevel(possibleEntrance);
-      changeLevel(nextLevel);
-    }
-    gamefield.moveSnake();
-    gamefield.tryEatFood();
-    repaint();
-  }
-
   private int findNextLevel(Entrance inputEntrance) {
     for (int i = 0; i < levels.size(); i++) {
       Level level = levels.get(i);
@@ -85,6 +72,19 @@ public class GameWindow extends JFrame implements ActionListener {
 
     }
     return -1;
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    Entrance possibleEntrance = gamefield.canMoveToNextLevel();
+    if (possibleEntrance != null) {
+      gamefield.setVisible(false);
+      int nextLevel = findNextLevel(possibleEntrance);
+      changeLevel(nextLevel);
+    }
+    gamefield.moveSnake();
+    gamefield.tryEatFood();
+    repaint();
   }
 
   public class FieldKeyListener extends KeyAdapter {
@@ -117,23 +117,6 @@ public class GameWindow extends JFrame implements ActionListener {
       if (key == KeyEvent.VK_M) {
         new MenuWindow().setVisible(true);
         dispose();
-      }
-      //Эти обработчики потом уберём, они для дебага
-      if (key == KeyEvent.VK_1) {
-        gamefield.setVisible(false);
-        changeLevel(1);
-      }
-      if (key == KeyEvent.VK_2) {
-        gamefield.setVisible(false);
-        changeLevel(2);
-      }
-      if (key == KeyEvent.VK_3) {
-        gamefield.setVisible(false);
-        changeLevel(3);
-      }
-      if (key == KeyEvent.VK_0) {
-        gamefield.setVisible(false);
-        changeLevel(0);
       }
     }
   }

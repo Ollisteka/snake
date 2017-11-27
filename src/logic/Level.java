@@ -11,9 +11,6 @@ import lombok.Setter;
 public class Level implements Serializable {
 
   @Getter
-  @Setter
-  Set<Entrance> entrances;
-  @Getter
   private int width;
   @Getter
   private int height;
@@ -23,6 +20,12 @@ public class Level implements Serializable {
   @Getter
   @Setter
   private Set<Wall> mazeLocations;
+  @Getter
+  @Setter
+  Set<Entrance> entrances;
+  @Getter
+  @Setter
+  Food food;
 
   public Level(Config config, String level) {
     levelName = level;
@@ -30,6 +33,11 @@ public class Level implements Serializable {
     entrances = new HashSet<>();
     width = config.getFieldWidth();
     height = config.getFieldHeight();
+    generateFood();
+  }
+
+  public void generateFood() {
+    food = new Food(findFreeSpot());
   }
 
   public Set<Wall> createRandomField() {
