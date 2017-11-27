@@ -1,6 +1,5 @@
 package GUI;
 
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -58,20 +57,13 @@ public class GameWindow extends JFrame implements ActionListener {
     add(gamefield);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    if (gamefield.canMoveToNextLevel()) {
-      gamefield.setVisible(false);
-      int nextLevel = findNextLevel();
-      changeLevel(nextLevel);
-    }
-    gamefield.moveSnake();
-    gamefield.tryEatFood();
-    repaint();
-  }
-
-  private int findNextLevel() {
-    Point snakeHead = gamefield.getSnakeLocations()[0];
+  /**
+   * Найти номер уровня, в котором лежит entrance, соответствующий тому, в который мы вошли
+   *
+   * @param inputEntrance вход, в который мы зашли
+   * @return номер уровня, в который мы попадём
+   */
+  private int findNextLevel(Entrance inputEntrance) {
     for (int i = 0; i < levels.size(); i++) {
       Level level = levels.get(i);
       if (level == gamefield.getLevel()) {
@@ -79,14 +71,26 @@ public class GameWindow extends JFrame implements ActionListener {
       }
       Set<Entrance> openedEntrances = level.findOpenEntrances();
       for (Entrance openedEntry : openedEntrances) {
-        Point location = openedEntry.getLocation();
-        if (location.x == snakeHead.x || location.y == snakeHead.y) {
+        if (openedEntry.getName() == inputEntrance.getName()) {
           return i;
         }
       }
 
     }
     return -1;
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    Entrance possibleEntrance = gamefield.canMoveToNextLevel();
+    if (possibleEntrance != null) {
+      gamefield.setVisible(false);
+      int nextLevel = findNextLevel(possibleEntrance);
+      changeLevel(nextLevel);
+    }
+    gamefield.moveSnake();
+    gamefield.tryEatFood();
+    repaint();
   }
 
   public class FieldKeyListener extends KeyAdapter {
@@ -119,23 +123,6 @@ public class GameWindow extends JFrame implements ActionListener {
       if (key == KeyEvent.VK_M) {
         new MenuWindow().setVisible(true);
         dispose();
-      }
-      //Эти обработчики потом уберём, они для дебага
-      if (key == KeyEvent.VK_1) {
-        gamefield.setVisible(false);
-        changeLevel(1);
-      }
-      if (key == KeyEvent.VK_2) {
-        gamefield.setVisible(false);
-        changeLevel(2);
-      }
-      if (key == KeyEvent.VK_3) {
-        gamefield.setVisible(false);
-        changeLevel(3);
-      }
-      if (key == KeyEvent.VK_0) {
-        gamefield.setVisible(false);
-        changeLevel(0);
       }
     }
   }

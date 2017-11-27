@@ -9,12 +9,15 @@ public class Entrance {
   @Getter
   private Point location;
   @Getter
+  private char name;
+  @Getter
   @Setter
   private boolean open;
 
-  public Entrance(int width, int height, boolean opened) {
+  public Entrance(int width, int height, char name, boolean opened) {
     location = new Point(width, height);
     open = opened;
+    this.name = name;
   }
 
   @Override

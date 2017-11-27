@@ -132,13 +132,13 @@ public class MenuWindow extends JFrame {
   private void startNewStory(ActionEvent evt) throws IOException, ClassNotFoundException {
     Config config = new Config(25, 25, 25, 250);
     ArrayList<Level> levels = new ArrayList<>();
-    ArrayList<String> levelsNames = new ArrayList<>();
-    levelsNames.add("Level_0.txt");
-    levelsNames.add("Level_1.txt");
-    levelsNames.add("Level_2.txt");
-    levelsNames.add("Level_3.txt");
+    ArrayList<String> filenames = new ArrayList<>();
+    filenames.add("Level_0.txt");
+    filenames.add("Level_1.txt");
+    filenames.add("Level_2.txt");
+    filenames.add("Level_3.txt");
 
-    for (String levelName : levelsNames) {
+    for (String levelName : filenames) {
       levels.add(Game.deserialize(levelName));
     }
     this.dispose();

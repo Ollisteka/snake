@@ -11,9 +11,6 @@ import lombok.Setter;
 public class Level implements Serializable {
 
   @Getter
-  @Setter
-  Set<Entrance> entrances;
-  @Getter
   private int width;
   @Getter
   private int height;
@@ -23,6 +20,12 @@ public class Level implements Serializable {
   @Getter
   @Setter
   private Set<Wall> mazeLocations;
+  @Getter
+  @Setter
+  Set<Entrance> entrances;
+  @Getter
+  @Setter
+  Food food;
 
   public Level(Config config, String level) {
     levelName = level;
@@ -30,6 +33,11 @@ public class Level implements Serializable {
     entrances = new HashSet<>();
     width = config.getFieldWidth();
     height = config.getFieldHeight();
+    generateFood();
+  }
+
+  public void generateFood() {
+    food = new Food(findFreeSpot());
   }
 
   public Set<Wall> createRandomField() {
@@ -72,14 +80,36 @@ public class Level implements Serializable {
     return openedEntrances;
   }
 
-  public Point findEntry(Point snakeHead) {
+  /**
+   * Ищет в данном уровне вход с названием inputEntry
+   *
+   * @return местоположение входа
+   */
+  public Point findEntry(char inputEntry) {
     Set<Entrance> openedEntrances = findOpenEntrances();
     for (Entrance openedEntry : openedEntrances) {
-      Point location = openedEntry.getLocation();
-      if (location.x == snakeHead.x || location.y == snakeHead.y) {
+      if (openedEntry.getName() == inputEntry) {
+        Point location = openedEntry.getLocation();
         return new Point(location.x, location.y);
       }
     }
     return null;
+  }
+
+  /**
+   * Ищет в данном уровне вход с местоположением location
+   * @param location
+   * @return имя входа
+   */
+  public char getEntranceName(Point location) {
+    Set<Entrance> openedEntrances = findOpenEntrances();
+    for (Entrance openedEntry : openedEntrances) {
+      Point entryLocation = openedEntry.getLocation();
+      if (entryLocation.x == location.x && entryLocation.y == location.y) {
+        return openedEntry.getName();
+      }
+    }
+    //дефолтное значение для char == ошибка
+    return '\u0000';
   }
 }

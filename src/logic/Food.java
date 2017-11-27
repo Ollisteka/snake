@@ -1,20 +1,14 @@
 package logic;
 
 import java.awt.Point;
+import lombok.Getter;
 
 public class Food {
 
+  @Getter
   private Point location;
 
-  public Food(Level level) {
-    createFood(level);
-  }
-
-  public Point getLocation() {
-    return location;
-  }
-
-  private void createFood(Level level) {
-    location = level.findFreeSpot();
+  public Food(Point location) {
+    this.location = location;
   }
 }
