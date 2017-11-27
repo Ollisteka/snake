@@ -2,17 +2,15 @@ package logic;
 
 import java.awt.Point;
 import java.io.Serializable;
+import lombok.Getter;
 
 public class Wall implements Serializable {
 
+  @Getter
   private Point location;
 
   public Wall(int width, int height) {
     location = new Point(width, height);
-  }
-
-  public Point getLocation() {
-    return location;
   }
 
   @Override

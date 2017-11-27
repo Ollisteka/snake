@@ -80,6 +80,11 @@ public class Level implements Serializable {
     return openedEntrances;
   }
 
+  /**
+   * Ищет в данном уровне вход с названием inputEntry
+   *
+   * @return местоположение входа
+   */
   public Point findEntry(char inputEntry) {
     Set<Entrance> openedEntrances = findOpenEntrances();
     for (Entrance openedEntry : openedEntrances) {
@@ -91,6 +96,11 @@ public class Level implements Serializable {
     return null;
   }
 
+  /**
+   * Ищет в данном уровне вход с местоположением location
+   * @param location
+   * @return имя входа
+   */
   public char getEntranceName(Point location) {
     Set<Entrance> openedEntrances = findOpenEntrances();
     for (Entrance openedEntry : openedEntrances) {
@@ -99,7 +109,7 @@ public class Level implements Serializable {
         return openedEntry.getName();
       }
     }
-    //дефолтное значение для char
+    //дефолтное значение для char == ошибка
     return '\u0000';
   }
 }

@@ -57,6 +57,12 @@ public class GameWindow extends JFrame implements ActionListener {
     add(gamefield);
   }
 
+  /**
+   * Найти номер уровня, в котором лежит entrance, соответствующий тому, в который мы вошли
+   *
+   * @param inputEntrance вход, в который мы зашли
+   * @return номер уровня, в который мы попадём
+   */
   private int findNextLevel(Entrance inputEntrance) {
     for (int i = 0; i < levels.size(); i++) {
       Level level = levels.get(i);

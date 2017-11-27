@@ -10,11 +10,9 @@ public class Snake {
   private boolean left;
   private boolean up;
   private boolean down;
-  private boolean isAlive;
 
   public Snake() {
     length = 1;
-    isAlive = true;
   }
 
 
@@ -34,9 +32,6 @@ public class Snake {
     return down;
   }
 
-  public boolean isAlive() {
-    return isAlive;
-  }
 
   public void moveRight() {
     if (!left) {
@@ -52,7 +47,7 @@ public class Snake {
     }
   }
 
-  public void stopSnake() {
+  private void stopSnake() {
     left = right = down = up = false;
   }
 
@@ -80,7 +75,6 @@ public class Snake {
 
   public void die() {
     stopSnake();
-    isAlive = false;
   }
 
 }

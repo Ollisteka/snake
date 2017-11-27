@@ -25,7 +25,6 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private Image gameOver;
   private Image wallIm;
   private Image headIm;
-  // private Food food;
   @Getter
   @Setter
   private boolean isPause = false;
@@ -61,21 +60,27 @@ public class GameFieldPanel extends JPanel implements Serializable {
 
   private void initGameField() {
     snake = new Snake();
-    // food = new Food(level);
     placeSnake();
   }
 
   private void initGameField(GameFieldPanel previousState) {
     snake = previousState.getSnake();
-    //food = new Food(level);
     placeSnake(previousState);
   }
 
+  /**
+   * Размещает змейку при первом запуске игры
+   */
   private void placeSnake() {
     snakeLocations = new Point[height * width];
     snakeLocations[0] = level.findFreeSpot();
   }
 
+  /**
+   * Размещает змейку с учётом того, что она вылезла из какого то входа
+   *
+   * @param previousState прерыдущее состояние игры
+   */
   private void placeSnake(GameFieldPanel previousState) {
     Point prevSnakeHead = previousState.getSnakeLocations()[0];
     char inputEntry = previousState.level.getEntranceName(prevSnakeHead);
@@ -83,6 +88,10 @@ public class GameFieldPanel extends JPanel implements Serializable {
     snakeLocations[0] = level.findEntry(inputEntry);
   }
 
+  /**
+   * Количество клеток поля, занятых змейкой
+   * @return
+   */
   private int findSnakePartsOnBoard() {
     int count = 0;
     for (Point point : snakeLocations) {
@@ -148,6 +157,10 @@ public class GameFieldPanel extends JPanel implements Serializable {
     }
   }
 
+  /**
+   * Проверяем, находимся ли мы в ячейке с открытым входом.
+   * @return Вход, в который мы попали или null
+   */
   public Entrance canMoveToNextLevel() {
     for (Entrance entrance : level.getEntrances()) {
       if (snakeLocations[0].x == entrance.getLocation().x &&
