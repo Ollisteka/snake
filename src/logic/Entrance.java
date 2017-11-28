@@ -13,11 +13,14 @@ public class Entrance {
   @Getter
   @Setter
   private boolean open;
+  @Getter
+  private String level;
 
-  public Entrance(int x, int y, char name, boolean opened) {
+  public Entrance(int x, int y, char name, String levelName, boolean opened) {
     location = new Point(x, y);
     open = opened;
     this.name = name;
+    level = levelName;
   }
 
   public boolean isOpen(){

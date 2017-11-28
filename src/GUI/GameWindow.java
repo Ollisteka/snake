@@ -4,8 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.*;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
@@ -24,6 +23,7 @@ public class GameWindow extends JFrame implements ActionListener {
 
   public GameWindow(Config config, Level level) {
     initWindow(config);
+    game = new Game(config);
     gamefield = new GameFieldPanel(game, level);
     add(gamefield);
     setVisible(true);
@@ -32,7 +32,7 @@ public class GameWindow extends JFrame implements ActionListener {
   public GameWindow(ArrayList<Level> levels, Config config) {
     this.levels = levels;
     this.baseConfiguration = config;
-
+    game = new Game(config, levels);
     initWindow(baseConfiguration);
 
     gamefield = new GameFieldPanel(game, this.levels.get(0));
@@ -42,7 +42,6 @@ public class GameWindow extends JFrame implements ActionListener {
   }
 
   private void initWindow(Config config) {
-    game = new Game(config);
     setTitle("Snake");
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setSize(config.getWindowWidth(), config.getWindowHeight());
@@ -82,6 +81,7 @@ public class GameWindow extends JFrame implements ActionListener {
     }
     return -1;
   }
+
 
   @Override
   public void actionPerformed(ActionEvent e) {

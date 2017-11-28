@@ -15,13 +15,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JFrame;
 
 public class Game {
 
@@ -30,10 +26,24 @@ public class Game {
   private int score;
   @Getter
   private Config config;
+  @Getter
+  @Setter
+  private Map<Integer,Entrance> closedEntrances;
+  @Getter
+  private ArrayList<Level> levels;
 
   public Game(Config config) {
     score = 0;
     this.config = config;
+    closedEntrances = new HashMap<>();
+    levels = new ArrayList<>();
+  }
+
+  public Game(Config config, ArrayList<Level> levels) {
+    score = 0;
+    this.config = config;
+    closedEntrances = getClosedEntrances(levels);
+    this.levels = levels;
   }
 
   public static void main(String[] args) {
@@ -42,6 +52,44 @@ public class Game {
 
   public void addScore(){
     setScore(getScore() + 10);
+    tryToOpenEntrance();
+  }
+
+  public void tryToOpenEntrance() {
+    Integer score = getScore();
+    if (getClosedEntrances().containsKey(score)) {
+      Entrance openingEntrance = getClosedEntrances().get(score);
+      opened: for (Level level : levels) {
+                for (Entrance entrance : level.getEntrances())
+                  if (entrance == openingEntrance){
+                    entrance.setOpen(true);
+                    break opened;
+                  }
+                }
+      getClosedEntrances().remove(score);
+    }
+  }
+
+  /**
+   * Найти все закрытые входы в игре (на всех уровнях) и поставить им в соответствие очки,
+   * котовые нужно набрать для открытия двери
+   *
+   * @param levels уровни, которые существуют в этой игре
+   * @return словарик, где ключь - это очки, а значение - "вход"/дверь уровня
+   */
+  private Map<Integer,Entrance> getClosedEntrances(ArrayList<Level> levels) {
+    Map<Integer,Entrance> closedEntrances = new HashMap<>();
+    Integer count = 50;
+    for (Level level : levels) {
+      for (Entrance entrance : level.getEntrances()) {
+        if (!entrance.isOpen()) {
+          closedEntrances.put(count, entrance);
+          count += 50;
+        }
+      }
+    }
+
+    return closedEntrances;
   }
 
   private static ArrayList<String> readLines(String filePath) {
@@ -119,11 +167,11 @@ public class Game {
         }
         if (Character.isLowerCase(line.charAt(j))) {
           //вход\выход из уровня, открытый
-          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), true));
+          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), levelName, true));
         }
         if (Character.isUpperCase(line.charAt(j))) {
           //вход\выход из уровня, закрыт
-          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), false));
+          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), levelName, false));
         }
         width = j;
       }
