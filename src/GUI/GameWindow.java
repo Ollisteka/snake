@@ -11,6 +11,7 @@ import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import logic.Config;
 import logic.Entrance;
+import logic.Game;
 import logic.Level;
 
 public class GameWindow extends JFrame implements ActionListener {
@@ -19,27 +20,29 @@ public class GameWindow extends JFrame implements ActionListener {
   private ArrayList<Level> levels;
   private Config baseConfiguration;
   private Timer timer;
+  private Game game;
 
   public GameWindow(Config config, Level level) {
     initWindow(config);
-    gamefield = new GameFieldPanel(config, level);
+    gamefield = new GameFieldPanel(game, level);
     add(gamefield);
     setVisible(true);
   }
 
-  public GameWindow(ArrayList<Level> levels, Config baseConfiguration) {
+  public GameWindow(ArrayList<Level> levels, Config config) {
     this.levels = levels;
-    this.baseConfiguration = baseConfiguration;
+    this.baseConfiguration = config;
 
     initWindow(baseConfiguration);
 
-    gamefield = new GameFieldPanel(baseConfiguration, this.levels.get(0));
+    gamefield = new GameFieldPanel(game, this.levels.get(0));
     add(gamefield);
     setVisible(true);
 
   }
 
   private void initWindow(Config config) {
+    game = new Game(config);
     setTitle("Snake");
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setSize(config.getWindowWidth(), config.getWindowHeight());
@@ -53,7 +56,7 @@ public class GameWindow extends JFrame implements ActionListener {
   }
 
   public void changeLevel(int levelNumber) {
-    gamefield = new GameFieldPanel(baseConfiguration, levels.get(levelNumber), gamefield);
+    gamefield = new GameFieldPanel(game, levels.get(levelNumber), gamefield);
     add(gamefield);
   }
 

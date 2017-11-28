@@ -19,18 +19,21 @@ import logic.Level;
 
 public class MenuWindow extends JFrame {
 
+  private Config config;
   private JButton buttonRandom;
-  //TODO к этой кнопке - метод startNewStory
-  private JButton buttonStory;
+  private JButton buttonStart;
   private JButton buttonRedactor;
   private JButton buttonOpen;
   private GroupLayout layout;
+
 
   public MenuWindow() {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setLocation(600, 400);
     setTitle("Snake: menu");
+    config = new Config(25, 25, 25, 250);
 
+    buttonStart = new JButton(" Start new game ");
     buttonRandom = new JButton(" Create random level and play ");
     buttonRedactor = new JButton(" Create new level ");
     buttonOpen = new JButton(" Upload saved level ");
@@ -42,7 +45,7 @@ public class MenuWindow extends JFrame {
     setBackground(Color.BLACK);
     getContentPane().setBackground(Color.BLACK);
 
-    buttonRandom.addActionListener(evt -> {
+    buttonStart.addActionListener(evt -> {
       try {
         startNewStory(evt);
       } catch (IOException e) {
@@ -51,6 +54,7 @@ public class MenuWindow extends JFrame {
         e.printStackTrace();
       }
     });
+    buttonRandom.addActionListener(evt -> randomActionPerformed(evt));
     buttonOpen.addActionListener(evt -> uploadActionPerformed(evt));
     buttonRedactor.addActionListener(evt -> createActionPerformed(evt));
 
@@ -60,19 +64,26 @@ public class MenuWindow extends JFrame {
   private void setUpButtons() {
     Font font = new Font("Comic Sans MS", Font.BOLD, 40);
 
+    buttonStart.setFont(font);
     buttonRandom.setFont(font);
     buttonRedactor.setFont(font);
     buttonOpen.setFont(font);
 
+    buttonStart.setBackground(Color.BLACK);
+    buttonStart.setForeground(Color.GREEN);
+
     buttonRandom.setBackground(Color.BLACK);
     buttonRandom.setForeground(Color.GREEN);
+
     buttonRedactor.setBackground(Color.BLACK);
     buttonRedactor.setForeground(Color.GREEN);
+
     buttonOpen.setBackground(Color.BLACK);
     buttonOpen.setForeground(Color.GREEN);
 
     LineBorder lb = new LineBorder(Color.GREEN);
 
+    buttonStart.setBorder(lb);
     buttonRandom.setBorder(lb);
     buttonRedactor.setBorder(lb);
     buttonOpen.setBorder(lb);
@@ -88,16 +99,18 @@ public class MenuWindow extends JFrame {
         .addGroup(layout.createSequentialGroup()
             .addGap(5, 100, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(LEADING)
+                .addComponent(buttonStart)
                 .addComponent(buttonRandom)
                 .addComponent(buttonRedactor)
                 .addComponent(buttonOpen))
             .addGap(5, 100, Short.MAX_VALUE)
         ));
 
-    layout.linkSize(SwingConstants.HORIZONTAL, buttonOpen, buttonRandom, buttonRedactor);
+    layout.linkSize(SwingConstants.HORIZONTAL, buttonStart, buttonOpen, buttonRandom, buttonRedactor);
 
     layout.setVerticalGroup(layout.createSequentialGroup()
         .addGap(5, 50, Short.MAX_VALUE)
+        .addComponent(buttonStart)
         .addComponent(buttonRandom)
         .addComponent(buttonRedactor)
         .addComponent(buttonOpen)
@@ -111,7 +124,6 @@ public class MenuWindow extends JFrame {
   }
 
   private void uploadActionPerformed(ActionEvent evt) {
-    Config config = new Config(25, 25, 25, 250);
     try {
       Level level = Game.deserialize();
       new GameWindow(config, level).setVisible(true);
@@ -122,7 +134,6 @@ public class MenuWindow extends JFrame {
   }
 
   private void randomActionPerformed(ActionEvent evt) {
-    Config config = new Config(25, 25, 25, 250);
     Level level = new Level(config, "Random");
     level.setMazeLocations(level.createRandomField());
     this.dispose();
@@ -130,7 +141,6 @@ public class MenuWindow extends JFrame {
   }
 
   private void startNewStory(ActionEvent evt) throws IOException, ClassNotFoundException {
-    Config config = new Config(25, 25, 25, 250);
     ArrayList<Level> levels = new ArrayList<>();
     ArrayList<String> filenames = new ArrayList<>();
     filenames.add("Level_0.txt");
@@ -138,8 +148,8 @@ public class MenuWindow extends JFrame {
     filenames.add("Level_2.txt");
     filenames.add("Level_3.txt");
 
-    for (String levelName : filenames) {
-      levels.add(Game.deserialize(levelName));
+    for (String fileName : filenames) {
+      levels.add(Game.deserialize(fileName));
     }
     this.dispose();
     new GameWindow(levels, config).setVisible(true);

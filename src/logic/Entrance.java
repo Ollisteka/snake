@@ -14,10 +14,14 @@ public class Entrance {
   @Setter
   private boolean open;
 
-  public Entrance(int width, int height, char name, boolean opened) {
-    location = new Point(width, height);
+  public Entrance(int x, int y, char name, boolean opened) {
+    location = new Point(x, y);
     open = opened;
     this.name = name;
+  }
+
+  public boolean isOpen(){
+    return open;
   }
 
   @Override

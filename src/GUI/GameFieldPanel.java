@@ -7,16 +7,14 @@ import java.awt.Point;
 import java.io.Serializable;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import logic.Config;
-import logic.Entrance;
-import logic.Level;
-import logic.Snake;
-import logic.Wall;
+
+import logic.*;
 import lombok.Getter;
 import lombok.Setter;
 
 public class GameFieldPanel extends JPanel implements Serializable {
 
+  private Game game;
   private int width;
   private int height;
   private int pixel;
@@ -25,6 +23,7 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private Image gameOver;
   private Image wallIm;
   private Image headIm;
+  private Image closedImage;
   @Getter
   @Setter
   private boolean isPause = false;
@@ -35,17 +34,19 @@ public class GameFieldPanel extends JPanel implements Serializable {
   @Getter
   private Level level;
 
-  public GameFieldPanel(Config config, Level currentLevel) {
-    initGameSettings(config, currentLevel);
+  public GameFieldPanel(Game game, Level currentLevel) {
+    initGameSettings(game, currentLevel);
     initGameField();
   }
 
-  public GameFieldPanel(Config baseConfiguration, Level level, GameFieldPanel previousState) {
-    initGameSettings(baseConfiguration, level);
+  public GameFieldPanel(Game game, Level level, GameFieldPanel previousState) {
+    initGameSettings(game, level);
     initGameField(previousState);
   }
 
-  private void initGameSettings(Config config, Level currentLevel) {
+  private void initGameSettings(Game game, Level currentLevel) {
+    this.game = game;
+    Config config = game.getConfig();
     width = config.getFieldWidth();
     height = config.getFieldHeight();
     pixel = config.getPixelSize();
@@ -145,12 +146,15 @@ public class GameFieldPanel extends JPanel implements Serializable {
     wallIm = p.getImage();
     ImageIcon q = new ImageIcon("head.png");
     headIm = q.getImage();
+    ImageIcon c = new ImageIcon("closed_lock.png");
+    closedImage = c.getImage();
   }
 
   public void tryEatFood() {
     if (snakeLocations[0].x == level.getFood().getLocation().x
         && snakeLocations[0].y == level.getFood().getLocation().y) {
       snake.eatFood();
+      game.addScore();
       level.generateFood();
       int i = snake.getLength() - 1;
       snakeLocations[i] = new Point(snakeLocations[i - 1].x, snakeLocations[i - 1].y);
@@ -216,17 +220,19 @@ public class GameFieldPanel extends JPanel implements Serializable {
       for (Wall wall : level.getMazeLocations()) {
         g.drawImage(wallIm, wall.getLocation().x * pixel, wall.getLocation().y * pixel, this);
       }
+      for (Entrance e : level.getEntrances()) {
+        if (!e.isOpen()) {
+          g.drawImage(closedImage, e.getLocation().x * pixel, e.getLocation().y * pixel, this);
+        }
+      }
     } else {
       g.drawImage(gameOver, width / 2 * pixel - 420, height / 2 * pixel - 240, this);
     }
     g.setColor(Color.green);
-    g.drawLine(0, 0, width * pixel, 0);
-    g.drawLine(0, 0, 0, height * pixel);
-    g.drawLine(width * pixel, 0, width * pixel, height * pixel);
-    g.drawLine(0, height * pixel, width * pixel, height * pixel);
+    g.drawRect(0, 0, width*pixel, height*pixel);
     g.setColor(Color.cyan);
     g.drawString("Score:", width * pixel + 100, 100);
-    g.drawString(Integer.toString((snake.getLength() - 1) * 10), width * pixel + 100, 150);
+    g.drawString(Integer.toString(game.getScore()), width * pixel + 100, 150);
 
   }
 

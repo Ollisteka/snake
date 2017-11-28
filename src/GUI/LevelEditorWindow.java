@@ -112,7 +112,7 @@ public class LevelEditorWindow extends JFrame {
 
   private void saveActionPerformed(ActionEvent evt) throws IOException {
     Config config = new Config(25, 25, 25, 250);
-    Game game = new Game();
+    Game game = new Game(config);
     Level level = redactor.getLevel();
     game.serialize(config.getFieldWidth(), config.getFieldHeight(), level);
     // Здесь надо вытащить уровень с redactor (поле этого же класса)

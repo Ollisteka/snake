@@ -2,6 +2,9 @@ package logic;
 
 
 import GUI.MenuWindow;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,15 +23,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 
-public class Game extends JFrame {
+public class Game {
 
-  public Game() {
-    setTitle("Snake");
+  @Setter
+  @Getter
+  private int score;
+  @Getter
+  private Config config;
+
+  public Game(Config config) {
+    score = 0;
+    this.config = config;
   }
 
   public static void main(String[] args) {
-
     new MenuWindow().setVisible(true);
+  }
+
+  public void addScore(){
+    setScore(getScore() + 10);
   }
 
   private static ArrayList<String> readLines(String filePath) {
