@@ -5,6 +5,7 @@ import GUI.MenuWindow;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,6 +17,7 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +32,16 @@ public class Game {
   @Setter
   private Map<Integer,Entrance> closedEntrances;
   @Getter
-  private ArrayList<Level> levels;
+  private List<Level> levels;
+  @Getter
+  @Setter
+  private boolean isPause = false;
+  @Getter
+  private Point[] snakeLocations;
+  @Getter
+  private Snake snake;
+  @Getter
+  private Level level;
 
   public Game(Config config) {
     score = 0;
@@ -39,7 +50,7 @@ public class Game {
     levels = new ArrayList<>();
   }
 
-  public Game(Config config, ArrayList<Level> levels) {
+  public Game(Config config, List<Level> levels) {
     score = 0;
     this.config = config;
     closedEntrances = getClosedEntrances(levels);
@@ -77,7 +88,7 @@ public class Game {
    * @param levels уровни, которые существуют в этой игре
    * @return словарик, где ключь - это очки, а значение - "вход"/дверь уровня
    */
-  private Map<Integer,Entrance> getClosedEntrances(ArrayList<Level> levels) {
+  private Map<Integer,Entrance> getClosedEntrances(List<Level> levels) {
     Map<Integer,Entrance> closedEntrances = new HashMap<>();
     Integer count = 50;
     for (Level level : levels) {

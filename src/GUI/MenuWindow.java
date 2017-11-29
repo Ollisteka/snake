@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +23,7 @@ public class MenuWindow extends JFrame {
   private Config config;
   private JButton buttonRandom;
   private JButton buttonStart;
+  private JButton buttonMultiplayer;
   private JButton buttonRedactor;
   private JButton buttonOpen;
   private GroupLayout layout;
@@ -33,6 +35,7 @@ public class MenuWindow extends JFrame {
     setTitle("Snake: menu");
     config = new Config(25, 25, 25, 250);
 
+    buttonMultiplayer = new JButton(" Multiplayer game ");
     buttonStart = new JButton(" Start new game ");
     buttonRandom = new JButton(" Create random level and play ");
     buttonRedactor = new JButton(" Create new level ");
@@ -54,6 +57,15 @@ public class MenuWindow extends JFrame {
         e.printStackTrace();
       }
     });
+    buttonMultiplayer.addActionListener(evt -> {
+      try {
+        multiplayerActionPerformed(evt);
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
+    });
     buttonRandom.addActionListener(evt -> randomActionPerformed(evt));
     buttonOpen.addActionListener(evt -> uploadActionPerformed(evt));
     buttonRedactor.addActionListener(evt -> createActionPerformed(evt));
@@ -65,12 +77,16 @@ public class MenuWindow extends JFrame {
     Font font = new Font("Comic Sans MS", Font.BOLD, 40);
 
     buttonStart.setFont(font);
+    buttonMultiplayer.setFont(font);
     buttonRandom.setFont(font);
     buttonRedactor.setFont(font);
     buttonOpen.setFont(font);
 
     buttonStart.setBackground(Color.BLACK);
     buttonStart.setForeground(Color.GREEN);
+
+    buttonMultiplayer.setBackground(Color.BLACK);
+    buttonMultiplayer.setForeground(Color.GREEN);
 
     buttonRandom.setBackground(Color.BLACK);
     buttonRandom.setForeground(Color.GREEN);
@@ -84,6 +100,7 @@ public class MenuWindow extends JFrame {
     LineBorder lb = new LineBorder(Color.GREEN);
 
     buttonStart.setBorder(lb);
+    buttonMultiplayer.setBorder(lb);
     buttonRandom.setBorder(lb);
     buttonRedactor.setBorder(lb);
     buttonOpen.setBorder(lb);
@@ -100,17 +117,20 @@ public class MenuWindow extends JFrame {
             .addGap(5, 100, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(LEADING)
                 .addComponent(buttonStart)
+                .addComponent(buttonMultiplayer)
                 .addComponent(buttonRandom)
                 .addComponent(buttonRedactor)
                 .addComponent(buttonOpen))
             .addGap(5, 100, Short.MAX_VALUE)
         ));
 
-    layout.linkSize(SwingConstants.HORIZONTAL, buttonStart, buttonOpen, buttonRandom, buttonRedactor);
+    layout.linkSize(SwingConstants.HORIZONTAL, buttonStart, buttonMultiplayer,
+            buttonOpen, buttonRandom, buttonRedactor);
 
     layout.setVerticalGroup(layout.createSequentialGroup()
         .addGap(5, 50, Short.MAX_VALUE)
         .addComponent(buttonStart)
+        .addComponent(buttonMultiplayer)
         .addComponent(buttonRandom)
         .addComponent(buttonRedactor)
         .addComponent(buttonOpen)
@@ -121,6 +141,12 @@ public class MenuWindow extends JFrame {
   private void createActionPerformed(ActionEvent evt) {
     this.dispose();
     new LevelEditorWindow().setVisible(true);
+  }
+
+  private void multiplayerActionPerformed(ActionEvent evt) throws IOException, ClassNotFoundException {
+    List<Level> levels = readLevels();
+    this.dispose();
+    new GameWindow(levels, config).setVisible(true);
   }
 
   private void uploadActionPerformed(ActionEvent evt) {
@@ -141,8 +167,14 @@ public class MenuWindow extends JFrame {
   }
 
   private void startNewStory(ActionEvent evt) throws IOException, ClassNotFoundException {
-    ArrayList<Level> levels = new ArrayList<>();
-    ArrayList<String> filenames = new ArrayList<>();
+    List<Level> levels = readLevels();
+    this.dispose();
+    new GameWindow(levels, config).setVisible(true);
+  }
+
+  private List<Level> readLevels() throws IOException, ClassNotFoundException {
+    List<Level> levels = new ArrayList<>();
+    List<String> filenames = new ArrayList<>();
     filenames.add("Level_0.txt");
     filenames.add("Level_1.txt");
     filenames.add("Level_2.txt");
@@ -151,7 +183,6 @@ public class MenuWindow extends JFrame {
     for (String fileName : filenames) {
       levels.add(Game.deserialize(fileName));
     }
-    this.dispose();
-    new GameWindow(levels, config).setVisible(true);
+    return levels;
   }
 }
