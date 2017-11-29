@@ -76,12 +76,7 @@ public class LevelEditorPanel extends JPanel implements Serializable {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-        /*
-        Iterator iterator = maze.iterator();
-        while (iterator.hasNext()){
-            g.drawImage(bush,((Wall) iterator.next()).getLocation().x * pixel,
-                    ((Wall) iterator.next()).getLocation().y * pixel,this);
-        }*/
+
     Wall[] arr = (Wall[]) maze.toArray(new Wall[maze.size()]);
     for (Wall wall : arr) {
       g.drawImage(bush, wall.getLocation().x * pixel,

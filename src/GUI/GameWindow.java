@@ -4,13 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.*;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import logic.Config;
 import logic.Entrance;
+import logic.Game;
 import logic.Level;
 
 public class GameWindow extends JFrame implements ActionListener {
@@ -19,21 +19,23 @@ public class GameWindow extends JFrame implements ActionListener {
   private ArrayList<Level> levels;
   private Config baseConfiguration;
   private Timer timer;
+  private Game game;
 
   public GameWindow(Config config, Level level) {
     initWindow(config);
-    gamefield = new GameFieldPanel(config, level);
+    game = new Game(config);
+    gamefield = new GameFieldPanel(game, level);
     add(gamefield);
     setVisible(true);
   }
 
-  public GameWindow(ArrayList<Level> levels, Config baseConfiguration) {
+  public GameWindow(ArrayList<Level> levels, Config config) {
     this.levels = levels;
-    this.baseConfiguration = baseConfiguration;
-
+    this.baseConfiguration = config;
+    game = new Game(config, levels);
     initWindow(baseConfiguration);
 
-    gamefield = new GameFieldPanel(baseConfiguration, this.levels.get(0));
+    gamefield = new GameFieldPanel(game, this.levels.get(0));
     add(gamefield);
     setVisible(true);
 
@@ -53,7 +55,7 @@ public class GameWindow extends JFrame implements ActionListener {
   }
 
   public void changeLevel(int levelNumber) {
-    gamefield = new GameFieldPanel(baseConfiguration, levels.get(levelNumber), gamefield);
+    gamefield = new GameFieldPanel(game, levels.get(levelNumber), gamefield);
     add(gamefield);
   }
 
@@ -79,6 +81,7 @@ public class GameWindow extends JFrame implements ActionListener {
     }
     return -1;
   }
+
 
   @Override
   public void actionPerformed(ActionEvent e) {

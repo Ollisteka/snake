@@ -22,7 +22,7 @@ public class Level implements Serializable {
   private Set<Wall> mazeLocations;
   @Getter
   @Setter
-  Set<Entrance> entrances;
+  private Set<Entrance> entrances;
   @Getter
   @Setter
   Food food;
