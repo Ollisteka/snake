@@ -9,6 +9,7 @@ import org.junit.Test;
 public class FoodTest extends Assert {
 
   private String levelName = "test";
+
   @Test
   public void foodIntoTheField() {
     Config config = new Config(25, 25, 25, 250);

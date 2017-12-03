@@ -30,7 +30,7 @@ public class Serialization {
     writer.close();
   }
 
-  public static Level deserialize() {
+  public static Level deserialize() throws IOException {
     ArrayList<String> list = findOutFiles();
     Pattern p = Pattern.compile("Level_\\d\\d\\d\\d-\\d\\d-\\d\\d_\\d\\d-\\d\\d\\.txt");
     String level = "A";
@@ -47,12 +47,12 @@ public class Serialization {
 
   }
 
-  public static Level deserialize(String filename) {
+  public static Level deserialize(String filename) throws IOException {
     ArrayList<String> lines = readLines(filename);
     return convertIntoLevel(lines, filename);
   }
 
-  private static ArrayList<String> readLines(String filePath) {
+  private static ArrayList<String> readLines(String filePath) throws IOException {
     ArrayList<String> lines = new ArrayList<>();
     try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
       String sCurrentLine;
@@ -62,6 +62,7 @@ public class Serialization {
       }
     } catch (IOException e) {
       e.printStackTrace();
+      throw e;
     }
     return lines;
   }

@@ -23,7 +23,7 @@ public class Entrance {
     level = levelName;
   }
 
-  public boolean isOpen(){
+  public boolean isOpen() {
     return open;
   }
 
