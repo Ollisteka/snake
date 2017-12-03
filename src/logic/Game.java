@@ -1,28 +1,19 @@
 package logic;
 
 
-import GUI.MenuWindow;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Game {
 
+  @Setter
+  @Getter
+  private List<Snake> snakes = new ArrayList<>();
   @Setter
   @Getter
   private int score;
@@ -30,53 +21,69 @@ public class Game {
   private Config config;
   @Getter
   @Setter
-  private Map<Integer,Entrance> closedEntrances;
+  private Map<Integer, Entrance> closedEntrances = new HashMap<>();
   @Getter
-  private List<Level> levels;
+  private List<Level> levels = new ArrayList<>();
   @Getter
   @Setter
-  private boolean isPause = false;
+  private boolean paused = false;
   @Getter
-  private Point[] snakeLocations;
-  @Getter
-  private Snake snake;
-  @Getter
-  private Level level;
+  @Setter
+  private Level currentLevel;
 
-  public Game(Config config) {
-    score = 0;
+  public Game(Config config, Level level, boolean twoPlayers) {
     this.config = config;
-    closedEntrances = new HashMap<>();
-    levels = new ArrayList<>();
+    levels.add(level);
+    currentLevel = level;
+    placeSnakes(twoPlayers);
   }
 
-  public Game(Config config, List<Level> levels) {
-    score = 0;
+
+  public Game(Config config, List<Level> levels, boolean twoPlayers) {
     this.config = config;
     closedEntrances = getClosedEntrances(levels);
     this.levels = levels;
+    currentLevel = levels.get(0);
+    placeSnakes(twoPlayers);
   }
 
-  public static void main(String[] args) {
-    new MenuWindow().setVisible(true);
+  private void placeSnakes(boolean twoPlayers) {
+    snakes.add(new Snake());
+    if (twoPlayers) {
+      snakes.add(new Snake());
+    }
+
+    for (Level level : levels) {
+      level.putSnakes(getSnakes());
+    }
+
+    for (Snake snake : getSnakes()) {
+      currentLevel.placeSnake(snake);
+      if (currentLevel.getFood() == null) {
+        currentLevel.generateFood();
+      }
+    }
+
   }
 
-  public void addScore(){
+  private void addScore() {
     setScore(getScore() + 10);
     tryToOpenEntrance();
   }
 
-  public void tryToOpenEntrance() {
+  private void tryToOpenEntrance() {
     Integer score = getScore();
     if (getClosedEntrances().containsKey(score)) {
       Entrance openingEntrance = getClosedEntrances().get(score);
-      opened: for (Level level : levels) {
-                for (Entrance entrance : level.getEntrances())
-                  if (entrance == openingEntrance){
-                    entrance.setOpen(true);
-                    break opened;
-                  }
-                }
+      opened:
+      for (Level level : levels) {
+        for (Entrance entrance : level.getEntrances()) {
+          if (entrance == openingEntrance) {
+            entrance.setOpen(true);
+            break opened;
+          }
+        }
+      }
       getClosedEntrances().remove(score);
     }
   }
@@ -88,8 +95,8 @@ public class Game {
    * @param levels уровни, которые существуют в этой игре
    * @return словарик, где ключь - это очки, а значение - "вход"/дверь уровня
    */
-  private Map<Integer,Entrance> getClosedEntrances(List<Level> levels) {
-    Map<Integer,Entrance> closedEntrances = new HashMap<>();
+  private Map<Integer, Entrance> getClosedEntrances(List<Level> levels) {
+    Map<Integer, Entrance> closedEntrances = new HashMap<>();
     Integer count = 50;
     for (Level level : levels) {
       for (Entrance entrance : level.getEntrances()) {
@@ -103,107 +110,82 @@ public class Game {
     return closedEntrances;
   }
 
-  private static ArrayList<String> readLines(String filePath) {
-    ArrayList<String> lines = new ArrayList<>();
-    try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-      String sCurrentLine;
-
-      while ((sCurrentLine = br.readLine()) != null) {
-        lines.add(sCurrentLine);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
+  public void tryEatFood(Game game, Snake snake) {
+    Point[] snakeLocations = currentLevel.getSnakesBodies().get(snake);
+    if (snakeLocations[0].x == currentLevel.food.getLocation().x
+        && snakeLocations[0].y == currentLevel.food.getLocation().y) {
+      snake.eatFood();
+      game.addScore();
+      currentLevel.generateFood();
+      int i = snake.getLength() - 1;
+      snakeLocations[i] = new Point(snakeLocations[i - 1].x, snakeLocations[i - 1].y);
     }
-    return lines;
   }
 
-  public void serialize(int width, int height, Level level) throws IOException {
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
-    String nowAsISO = dateFormat.format(new Date());
-    String name = "Level_" + nowAsISO;
-    FileOutputStream fos = new FileOutputStream(name + ".txt");
-    String maze = convertToReadableFormat(width, height, level);
-    Writer writer = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"));
-    writer.write(maze);
-    writer.close();
-  }
-
-  public String convertToReadableFormat(int width, int height, Level level) {
-    String str = new String();
-    Set<Wall> maze = level.getMazeLocations();
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        if (maze.contains(new Wall(j, i))) {
-          str += "#";
-        } else {
-          str += ".";
-        }
-      }
-      str += "\r\n";
+  public void moveSnake(Level level, Snake snake) {
+    Point[] snakeLocations = level.getSnakesBodies().get(snake);
+    if (snakeLocations == null) {
+      return;
     }
-    return str;
-  }
-
-  public static Level deserialize() throws IOException, ClassNotFoundException {
-    ArrayList<String> list = findOutFiles();
-    Pattern p = Pattern.compile("Level_\\d\\d\\d\\d-\\d\\d-\\d\\d_\\d\\d-\\d\\d\\.txt");
-    String level = "A";
-    for (String name : list) {
-      Matcher m = p.matcher(name);
-      if (m.lookingAt()) {
-        if (name.compareTo(level) > 0) {
-          level = name;
-        }
-      }
+    int snakeOnBoard = level.findSnakePartsOnBoard(snake);
+    Point tail = null;
+    if (snakeOnBoard == 0) {
+      return;
     }
-    ArrayList<String> lines = readLines(level);
-    return convertIntoLevel(lines, "random");
-
-  }
-
-  public static Level deserialize(String filename) throws IOException, ClassNotFoundException {
-    ArrayList<String> lines = readLines(filename);
-    return convertIntoLevel(lines, filename);
-  }
-
-  private static Level convertIntoLevel(ArrayList<String> lines, String levelName) {
-    int i = 0;
-    Set<Wall> maze = new HashSet<>();
-    Set<Entrance> entrances = new HashSet<>();
-    int width = 0;
-    for (String line : lines) {
-      for (int j = 0; j < line.length(); j++) {
-        if (line.charAt(j) == '#') {
-          maze.add(new Wall(j, i));
-        }
-        if (Character.isLowerCase(line.charAt(j))) {
-          //вход\выход из уровня, открытый
-          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), levelName, true));
-        }
-        if (Character.isUpperCase(line.charAt(j))) {
-          //вход\выход из уровня, закрыт
-          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), levelName, false));
-        }
-        width = j;
-      }
-      i++;
+    if (snakeOnBoard != snake.getLength()) {
+      tail =
+          new Point(snakeLocations[snakeOnBoard - 1].x, snakeLocations[snakeOnBoard - 1].y);
     }
-    Config config = new Config(width, i, 25, 250);
-    Level level = new Level(config, levelName);
-    level.setMazeLocations(maze);
-    level.setEntrances(entrances);
-    return level;
+    for (int i = snakeOnBoard - 1; i > 0; i--) {
+      snakeLocations[i].x = snakeLocations[i - 1].x;
+      snakeLocations[i].y = snakeLocations[i - 1].y;
+    }
+
+    if (snake.looksRight()) {
+      snakeLocations[0].x++;
+
+    }
+    if (snake.looksLeft()) {
+      snakeLocations[0].x--;
+
+    }
+    if (snake.looksUp()) {
+      snakeLocations[0].y--;
+
+    }
+    if (snake.looksDown()) {
+      snakeLocations[0].y++;
+    }
+    if (snakeOnBoard != snake.getLength()) {
+      snakeLocations[snakeOnBoard] = tail;
+    }
+
   }
 
-  public static ArrayList<String> findOutFiles() {
-    File dir = new File(".");
-    File[] filesList = dir.listFiles();
-    ArrayList fileL = new ArrayList();
-    for (File file : filesList) {
-      if (file.isFile()) {
-        fileL.add(file.getName());
+  public void tryToDie(Snake snake) {
+    Point[] snakeLocations = currentLevel.getSnakesBodies().get(snake);
+    int snakeOnBoard = currentLevel.findSnakePartsOnBoard(snake);
+    if (snakeOnBoard == 0) {
+      return;
+    }
+    for (int j = 2; j < snakeOnBoard; j++) {
+      if (snakeLocations[0].x == snakeLocations[j].x &&
+          snakeLocations[0].y == snakeLocations[j].y) {
+        snake.die();
       }
     }
-    return fileL;
+    if (snakeLocations[0].x < 0 ||
+        snakeLocations[0].y < 0 ||
+        snakeLocations[0].x >= currentLevel.getWidth() ||
+        snakeLocations[0].y >= currentLevel.getHeight()) {
+      snake.die();
+    }
+    for (Wall wall : currentLevel.getMazeLocations()) {
+      if (snakeLocations[0].x == wall.getLocation().x &&
+          snakeLocations[0].y == wall.getLocation().y) {
+        snake.die();
+      }
+    }
   }
+
 }

@@ -2,13 +2,20 @@ package logic;
 
 import java.awt.Point;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
 public class Level implements Serializable {
+
+  @Getter
+  @Setter
+  Food food;
 
   @Getter
   private int width;
@@ -23,9 +30,11 @@ public class Level implements Serializable {
   @Getter
   @Setter
   private Set<Entrance> entrances;
+  //  @Getter
+//  private Point[] snakeLocations;
   @Getter
   @Setter
-  Food food;
+  private Map<Snake, Point[]> snakesBodies = new HashMap<Snake, Point[]>();
 
   public Level(Config config, String level) {
     levelName = level;
@@ -34,6 +43,12 @@ public class Level implements Serializable {
     width = config.getFieldWidth();
     height = config.getFieldHeight();
     generateFood();
+  }
+
+  public void putSnakes(List<Snake> snakes) {
+    for (Snake snake : snakes) {
+      snakesBodies.put(snake, new Point[height * width]);
+    }
   }
 
   public void generateFood() {
@@ -81,6 +96,25 @@ public class Level implements Serializable {
   }
 
   /**
+   * Размещает змейку при первом запуске игры
+   */
+  public void placeSnake(Snake snake) {
+    snakesBodies.get(snake)[0] = findFreeSpot();
+  }
+
+  /**
+   * Размещает змейку с учётом того, что она вылезла из какого то входа
+   *
+   * @param previousLevel прерыдущий уровень
+   */
+  public void placeSnake(Level previousLevel, Snake snake) {
+    Point prevSnakeHead = previousLevel.snakesBodies.get(snake)[0];
+    char inputEntry = previousLevel.getEntranceName(prevSnakeHead);
+    snakesBodies.get(snake)[0] = findEntry(inputEntry);
+  }
+
+
+  /**
    * Ищет в данном уровне вход с названием inputEntry
    *
    * @return местоположение входа
@@ -97,8 +131,44 @@ public class Level implements Serializable {
   }
 
   /**
+   * Количество клеток поля, занятых змейкой
+   */
+  public int findSnakePartsOnBoard(Snake snake) {
+    int count = 0;
+    for (Point point : snakesBodies.get(snake)) {
+      if (point != null) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+
+  /**
+   * Проверяем, находимся ли мы в ячейке с открытым входом.
+   *
+   * @return Вход, в который мы попали или null
+   */
+  public Entrance canMoveToNextLevel(Snake snake) {
+    Point[] snakeLocations = snakesBodies.get(snake);
+    for (Entrance entrance : entrances) {
+      if (snakeLocations[0].x == entrance.getLocation().x &&
+          snakeLocations[0].y == entrance.getLocation().y) {
+
+        if (entrance.isOpen()) {
+          return entrance;
+        } else {
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+
+
+  /**
    * Ищет в данном уровне вход с местоположением location
-   * @param location
+   *
    * @return имя входа
    */
   public char getEntranceName(Point location) {

@@ -13,8 +13,8 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import logic.Config;
-import logic.Game;
 import logic.Level;
+import logic.Serialization;
 
 public class LevelEditorWindow extends JFrame {
 
@@ -104,7 +104,7 @@ public class LevelEditorWindow extends JFrame {
     Config config = new Config(25, 25, 25, 250);
     Level level = redactor.getLevel();
 
-    new GameWindow(config, level).setVisible(true);
+    new GameWindow(config, level, false).setVisible(true);
     // Здесь надо вытащить уровень с redactor (поле этого же класса)
     // а потом запихнуть его в GameFieldPanel
     //new GameFieldPanel(config, ).setVisible(true);
@@ -112,9 +112,8 @@ public class LevelEditorWindow extends JFrame {
 
   private void saveActionPerformed(ActionEvent evt) throws IOException {
     Config config = new Config(25, 25, 25, 250);
-    Game game = new Game(config);
     Level level = redactor.getLevel();
-    game.serialize(config.getFieldWidth(), config.getFieldHeight(), level);
+    Serialization.serialize(config.getFieldWidth(), config.getFieldHeight(), level);
     // Здесь надо вытащить уровень с redactor (поле этого же класса)
     // и сохранить
     // можно потом снова вызвать окно меню
