@@ -37,7 +37,6 @@ public class GameFieldPanel extends JPanel implements Serializable {
 
   public GameFieldPanel(Game game, Level currentLevel) {
     initGameSettings(game, currentLevel);
-    initGameField();
   }
 
   private void initGameSettings(Game game, Level currentLevel) {
@@ -55,15 +54,10 @@ public class GameFieldPanel extends JPanel implements Serializable {
     setFocusable(true);
   }
 
-  private void initGameField() {
-    level.setSnake(new Snake());
-    level.placeSnake();
-    level.generateFood();
-  }
 
-  public void handlePreviousSnake(Level previousLevel) {
-    level.setSnake(previousLevel.getSnake());
-    level.placeSnake(previousLevel);
+  public void handlePreviousSnake(Level previousLevel, Snake snake) {
+    //level.setSnake(previousLevel.getSnake());
+    level.placeSnake(previousLevel, snake);
   }
 
   private void loadImages() {
@@ -81,38 +75,66 @@ public class GameFieldPanel extends JPanel implements Serializable {
     closedImage = c.getImage();
   }
 
-  @Override
-  protected void paintComponent(Graphics g) {
-    Point[] snakeLocations = level.getSnakeLocations();
-    super.paintComponent(g);
-    int snakeOnBoard = level.findSnakePartsOnBoard();
-    if (level.getSnake().isAlive()) {
-      Point location = level.getFood().getLocation();
-      g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
-      g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
-      for (int i = 1; i < snakeOnBoard; i++) {
-        if (snakeLocations[i].x >= width || snakeLocations[i].y >= height) {
-          continue;
-        }
-        g.drawImage(snakeIm, snakeLocations[i].x * pixel, snakeLocations[i].y * pixel, this);
+  private void paintGameOver(Graphics g) {
+    g.drawImage(gameOver, width / 2 * pixel - 420, height / 2 * pixel - 240, this);
+  }
+
+  private void paintEntrances(Graphics g) {
+    for (Entrance e : level.getEntrances()) {
+      if (!e.isOpen()) {
+        g.drawImage(closedImage, e.getLocation().x * pixel, e.getLocation().y * pixel, this);
       }
-      for (Wall wall : level.getMazeLocations()) {
-        g.drawImage(wallIm, wall.getLocation().x * pixel, wall.getLocation().y * pixel, this);
-      }
-      for (Entrance e : level.getEntrances()) {
-        if (!e.isOpen()) {
-          g.drawImage(closedImage, e.getLocation().x * pixel, e.getLocation().y * pixel, this);
-        }
-      }
-    } else {
-      g.drawImage(gameOver, width / 2 * pixel - 420, height / 2 * pixel - 240, this);
     }
+  }
+
+  private void paintWalls(Graphics g) {
+    for (Wall wall : level.getMazeLocations()) {
+      g.drawImage(wallIm, wall.getLocation().x * pixel, wall.getLocation().y * pixel, this);
+    }
+  }
+
+  private void paintSnake(Graphics g, Snake snake) {
+    Point[] snakeLocations = level.getSnakesBodies().get(snake);
+    int snakeOnBoard = level.findSnakePartsOnBoard(snake);
+    Point location = level.getFood().getLocation();
+    g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
+    g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
+    for (int i = 1; i < snakeOnBoard; i++) {
+      if (snakeLocations[i].x >= width || snakeLocations[i].y >= height) {
+        continue;
+      }
+      g.drawImage(snakeIm, snakeLocations[i].x * pixel, snakeLocations[i].y * pixel, this);
+    }
+
+  }
+
+  private void paintScores(Graphics g) {
     g.setColor(Color.green);
     g.drawRect(0, 0, width * pixel, height * pixel);
     g.setColor(Color.cyan);
     g.drawString("Score:", width * pixel + 100, 100);
     g.drawString(Integer.toString(game.getScore()), width * pixel + 100, 150);
-
   }
 
+  @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    for (Snake snake : game.getSnakes()) {
+      if (!snake.isAlive()) {
+        paintGameOver(g);
+        paintScores(g);
+        return;
+      }
+    }
+    for (Snake snake : game.getSnakes()) {
+      paintSnake(g, snake);
+      paintWalls(g);
+      paintEntrances(g);
+    }
+    //сюда можно запихнуть метод, который будет проверять все координаты, и рисовать поверх чёрное
+    // если там нет змей.
+    paintScores(g);
+  }
 }
+
+

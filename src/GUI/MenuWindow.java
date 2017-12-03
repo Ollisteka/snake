@@ -144,16 +144,16 @@ public class MenuWindow extends JFrame {
   }
 
   private void multiplayerActionPerformed(ActionEvent evt)
-      throws IOException, ClassNotFoundException {
+      throws IOException {
     List<Level> levels = readLevels();
     this.dispose();
-    new GameWindow(levels, config).setVisible(true);
+    new GameWindow(levels, config, true).setVisible(true);
   }
 
   private void uploadActionPerformed(ActionEvent evt) {
     try {
       Level level = Serialization.deserialize();
-      new GameWindow(config, level).setVisible(true);
+      new GameWindow(config, level, false).setVisible(true);
     } catch (IOException | ClassNotFoundException e) {
       new MenuWindow().setVisible(true);
     }
@@ -164,13 +164,13 @@ public class MenuWindow extends JFrame {
     Level level = new Level(config, "Random");
     level.setMazeLocations(level.createRandomField());
     this.dispose();
-    new GameWindow(config, level).setVisible(true);
+    new GameWindow(config, level, false).setVisible(true);
   }
 
-  private void startNewStory(ActionEvent evt) throws IOException, ClassNotFoundException {
+  private void startNewStory(ActionEvent evt) throws IOException {
     List<Level> levels = readLevels();
     this.dispose();
-    new GameWindow(levels, config).setVisible(true);
+    new GameWindow(levels, config, false).setVisible(true);
   }
 
   private List<Level> readLevels() throws IOException {
