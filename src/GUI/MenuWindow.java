@@ -15,8 +15,8 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import logic.Config;
-import logic.Game;
 import logic.Level;
+import logic.Serialization;
 
 public class MenuWindow extends JFrame {
 
@@ -125,7 +125,7 @@ public class MenuWindow extends JFrame {
         ));
 
     layout.linkSize(SwingConstants.HORIZONTAL, buttonStart, buttonMultiplayer,
-            buttonOpen, buttonRandom, buttonRedactor);
+        buttonOpen, buttonRandom, buttonRedactor);
 
     layout.setVerticalGroup(layout.createSequentialGroup()
         .addGap(5, 50, Short.MAX_VALUE)
@@ -143,7 +143,8 @@ public class MenuWindow extends JFrame {
     new LevelEditorWindow().setVisible(true);
   }
 
-  private void multiplayerActionPerformed(ActionEvent evt) throws IOException, ClassNotFoundException {
+  private void multiplayerActionPerformed(ActionEvent evt)
+      throws IOException, ClassNotFoundException {
     List<Level> levels = readLevels();
     this.dispose();
     new GameWindow(levels, config).setVisible(true);
@@ -151,7 +152,7 @@ public class MenuWindow extends JFrame {
 
   private void uploadActionPerformed(ActionEvent evt) {
     try {
-      Level level = Game.deserialize();
+      Level level = Serialization.deserialize();
       new GameWindow(config, level).setVisible(true);
     } catch (IOException | ClassNotFoundException e) {
       new MenuWindow().setVisible(true);
@@ -172,7 +173,7 @@ public class MenuWindow extends JFrame {
     new GameWindow(levels, config).setVisible(true);
   }
 
-  private List<Level> readLevels() throws IOException, ClassNotFoundException {
+  private List<Level> readLevels() throws IOException {
     List<Level> levels = new ArrayList<>();
     List<String> filenames = new ArrayList<>();
     filenames.add("Level_0.txt");
@@ -181,7 +182,7 @@ public class MenuWindow extends JFrame {
     filenames.add("Level_3.txt");
 
     for (String fileName : filenames) {
-      levels.add(Game.deserialize(fileName));
+      levels.add(Serialization.deserialize(fileName));
     }
     return levels;
   }
