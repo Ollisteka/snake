@@ -7,8 +7,12 @@ import java.awt.Point;
 import java.io.Serializable;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-
-import logic.*;
+import logic.Config;
+import logic.Entrance;
+import logic.Game;
+import logic.Level;
+import logic.Snake;
+import logic.Wall;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +32,7 @@ public class GameFieldPanel extends JPanel implements Serializable {
   @Setter
   private boolean isPause = false;
   @Getter
-  private Point[] snakeLocations;
+  private Point[] snakeLocations = new Point[height * width];
   @Getter
   private Snake snake;
   @Getter
@@ -37,11 +41,6 @@ public class GameFieldPanel extends JPanel implements Serializable {
   public GameFieldPanel(Game game, Level currentLevel) {
     initGameSettings(game, currentLevel);
     initGameField();
-  }
-
-  public GameFieldPanel(Game game, Level level, GameFieldPanel previousState) {
-    initGameSettings(game, level);
-    initGameField(previousState);
   }
 
   private void initGameSettings(Game game, Level currentLevel) {
@@ -62,9 +61,10 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private void initGameField() {
     snake = new Snake();
     placeSnake();
+    level.generateFood();
   }
 
-  private void initGameField(GameFieldPanel previousState) {
+  public void handlePreviousSnake(GameFieldPanel previousState) {
     snake = previousState.getSnake();
     placeSnake(previousState);
   }
@@ -85,7 +85,6 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private void placeSnake(GameFieldPanel previousState) {
     Point prevSnakeHead = previousState.getSnakeLocations()[0];
     char inputEntry = previousState.level.getEntranceName(prevSnakeHead);
-    snakeLocations = new Point[height * width];
     snakeLocations[0] = level.findEntry(inputEntry);
   }
 
@@ -215,6 +214,9 @@ public class GameFieldPanel extends JPanel implements Serializable {
       g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
       g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
       for (int i = 1; i < snakeOnBoard; i++) {
+        if (snakeLocations[i].x >= width || snakeLocations[i].y >= height) {
+          continue;
+        }
         g.drawImage(snakeIm, snakeLocations[i].x * pixel, snakeLocations[i].y * pixel, this);
       }
       for (Wall wall : level.getMazeLocations()) {

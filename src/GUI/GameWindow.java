@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
@@ -17,6 +19,7 @@ public class GameWindow extends JFrame implements ActionListener {
 
   private GameFieldPanel gamefield;
   private List<Level> levels;
+  private List<GameFieldPanel> gamefields = new ArrayList<GameFieldPanel>();
   private Config baseConfiguration;
   private Timer timer;
   private Game game;
@@ -35,8 +38,13 @@ public class GameWindow extends JFrame implements ActionListener {
     game = new Game(config, levels);
     initWindow(baseConfiguration);
 
-    gamefield = new GameFieldPanel(game, this.levels.get(0));
+    for (Level level : this.levels) {
+      gamefields.add(new GameFieldPanel(game, level));
+    }
+    gamefield = gamefields.get(0);
     add(gamefield);
+    //gamefield = new GameFieldPanel(game, this.levels.get(0));
+    //add(gamefield);
     setVisible(true);
 
   }
@@ -55,7 +63,10 @@ public class GameWindow extends JFrame implements ActionListener {
   }
 
   public void changeLevel(int levelNumber) {
-    gamefield = new GameFieldPanel(game, levels.get(levelNumber), gamefield);
+    //gamefield = new GameFieldPanel(game, levels.get(levelNumber), gamefield);
+    int lastGameField = gamefields.indexOf(gamefield);
+    gamefield = gamefields.get(levelNumber);
+    gamefield.handlePreviousSnake(gamefields.get(lastGameField));
     add(gamefield);
   }
 
@@ -90,8 +101,11 @@ public class GameWindow extends JFrame implements ActionListener {
       gamefield.setVisible(false);
       int nextLevel = findNextLevel(possibleEntrance);
       changeLevel(nextLevel);
+      gamefield.setVisible(true);
     }
-    gamefield.moveSnake();
+    for (GameFieldPanel fieldPanel : this.gamefields) {
+      fieldPanel.moveSnake();
+    }
     gamefield.tryEatFood();
     repaint();
   }
