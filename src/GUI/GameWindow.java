@@ -14,39 +14,35 @@ import logic.Config;
 import logic.Entrance;
 import logic.Game;
 import logic.Level;
+import logic.Snake;
 
 public class GameWindow extends JFrame implements ActionListener {
 
-  private GameFieldPanel gamefield;
-  private List<Level> levels;
-  private List<GameFieldPanel> gamefields = new ArrayList<GameFieldPanel>();
-  private Config baseConfiguration;
-  private Timer timer;
+  private GameFieldPanel currentGameField;
+  private Level currentLevel;
   private Game game;
+  private List<Level> levels;
+  private Timer timer;
 
   public GameWindow(Config config, Level level) {
     initWindow(config);
     game = new Game(config);
-    gamefield = new GameFieldPanel(game, level);
-    add(gamefield);
+    this.levels = new ArrayList<>();
+    levels.add(level);
+    currentLevel = level;
+    currentGameField = new GameFieldPanel(game, level);
+    add(currentGameField);
     setVisible(true);
   }
 
   public GameWindow(List<Level> levels, Config config) {
-    this.levels = levels;
-    this.baseConfiguration = config;
+    initWindow(config);
     game = new Game(config, levels);
-    initWindow(baseConfiguration);
-
-    for (Level level : this.levels) {
-      gamefields.add(new GameFieldPanel(game, level));
-    }
-    gamefield = gamefields.get(0);
-    add(gamefield);
-    //gamefield = new GameFieldPanel(game, this.levels.get(0));
-    //add(gamefield);
+    this.levels = levels;
+    currentLevel = levels.get(0);
+    currentGameField = new GameFieldPanel(game, currentLevel);
+    add(currentGameField);
     setVisible(true);
-
   }
 
   private void initWindow(Config config) {
@@ -62,12 +58,16 @@ public class GameWindow extends JFrame implements ActionListener {
     setFocusable(true);
   }
 
-  public void changeLevel(int levelNumber) {
-    //gamefield = new GameFieldPanel(game, levels.get(levelNumber), gamefield);
-    int lastGameField = gamefields.indexOf(gamefield);
-    gamefield = gamefields.get(levelNumber);
-    gamefield.handlePreviousSnake(gamefields.get(lastGameField));
-    add(gamefield);
+  /**
+   * Сменить текущую панель на новую, правильно разместив змейку
+   */
+  private void changeLevel(int levelNumber) {
+    Level lastLevel = currentGameField.getLevel();
+    Level newLevel = levels.get(levelNumber);
+    currentGameField = new GameFieldPanel(game, newLevel);
+    currentGameField.handlePreviousSnake(lastLevel);
+    add(currentGameField);
+    currentLevel = newLevel;
   }
 
   /**
@@ -79,7 +79,7 @@ public class GameWindow extends JFrame implements ActionListener {
   private int findNextLevel(Entrance inputEntrance) {
     for (int i = 0; i < levels.size(); i++) {
       Level level = levels.get(i);
-      if (level == gamefield.getLevel()) {
+      if (level == currentGameField.getLevel()) {
         continue;
       }
       Set<Entrance> openedEntrances = level.findOpenEntrances();
@@ -93,20 +93,20 @@ public class GameWindow extends JFrame implements ActionListener {
     return -1;
   }
 
-
   @Override
   public void actionPerformed(ActionEvent e) {
-    Entrance possibleEntrance = gamefield.canMoveToNextLevel();
+    Entrance possibleEntrance = currentLevel.canMoveToNextLevel();
     if (possibleEntrance != null) {
-      gamefield.setVisible(false);
+      currentGameField.setVisible(false);
       int nextLevel = findNextLevel(possibleEntrance);
       changeLevel(nextLevel);
-      gamefield.setVisible(true);
+      currentGameField.setVisible(true);
     }
-    for (GameFieldPanel fieldPanel : this.gamefields) {
-      fieldPanel.moveSnake();
+    for (Level level : this.levels) {
+      level.moveSnake();
     }
-    gamefield.tryEatFood();
+    currentLevel.tryToDie();
+    currentLevel.tryEatFood(game);
     repaint();
   }
 
@@ -116,24 +116,27 @@ public class GameWindow extends JFrame implements ActionListener {
     public void keyPressed(KeyEvent e) {
       super.keyPressed(e);
       int key = e.getKeyCode();
-      if (key == KeyEvent.VK_LEFT) {
-        gamefield.getSnake().moveLeft();
+      Snake snake = currentLevel.getSnake();
+
+      if (snake.isAlive() && key == KeyEvent.VK_LEFT) {
+        snake.moveLeft();
       }
-      if (key == KeyEvent.VK_UP) {
-        gamefield.getSnake().moveUp();
+      if (snake.isAlive() && key == KeyEvent.VK_UP) {
+        snake.moveUp();
       }
-      if (key == KeyEvent.VK_RIGHT) {
-        gamefield.getSnake().moveRight();
+      if (snake.isAlive() && key == KeyEvent.VK_RIGHT) {
+        snake.moveRight();
       }
-      if (key == KeyEvent.VK_DOWN) {
-        gamefield.getSnake().moveDown();
+      if (snake.isAlive() && key == KeyEvent.VK_DOWN) {
+        snake.moveDown();
       }
+
       if (key == KeyEvent.VK_SPACE) {
-        if (gamefield.isPause()) {
-          gamefield.setPause(false);
+        if (currentGameField.isPause()) {
+          currentGameField.setPause(false);
           timer.start();
         } else {
-          gamefield.setPause(true);
+          currentGameField.setPause(true);
           timer.stop();
         }
       }

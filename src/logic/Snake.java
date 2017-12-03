@@ -6,6 +6,8 @@ public class Snake {
 
   @Getter
   private int length;
+  @Getter
+  private boolean alive;
   private boolean right;
   private boolean left;
   private boolean up;
@@ -13,6 +15,7 @@ public class Snake {
 
   public Snake() {
     length = 1;
+    alive = true;
   }
 
 
@@ -74,6 +77,7 @@ public class Snake {
   }
 
   public void die() {
+    alive = false;
     stopSnake();
   }
 
