@@ -16,7 +16,7 @@ import logic.Level;
 public class GameWindow extends JFrame implements ActionListener {
 
   private GameFieldPanel gamefield;
-  private ArrayList<Level> levels;
+  private List<Level> levels;
   private Config baseConfiguration;
   private Timer timer;
   private Game game;
@@ -29,7 +29,7 @@ public class GameWindow extends JFrame implements ActionListener {
     setVisible(true);
   }
 
-  public GameWindow(ArrayList<Level> levels, Config config) {
+  public GameWindow(List<Level> levels, Config config) {
     this.levels = levels;
     this.baseConfiguration = config;
     game = new Game(config, levels);
