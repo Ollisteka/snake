@@ -54,16 +54,8 @@ public class Game {
     }
 
     for (Level level : levels) {
-      level.putSnakes(getSnakes());
+      level.initializeSnakes(getSnakes());
     }
-
-    for (Snake snake : getSnakes()) {
-      currentLevel.placeSnake(snake);
-      if (currentLevel.getFood() == null) {
-        currentLevel.generateFood();
-      }
-    }
-
   }
 
   private void addScore() {
@@ -112,8 +104,8 @@ public class Game {
 
   public void tryEatFood(Game game, Snake snake) {
     Point[] snakeLocations = currentLevel.getSnakesBodies().get(snake);
-    if (snakeLocations[0].x == currentLevel.food.getLocation().x
-        && snakeLocations[0].y == currentLevel.food.getLocation().y) {
+    if (snakeLocations[0].x == currentLevel.getFood().getLocation().x
+        && snakeLocations[0].y == currentLevel.getFood().getLocation().y) {
       snake.eatFood();
       game.addScore();
       currentLevel.generateFood();

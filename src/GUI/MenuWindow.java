@@ -158,7 +158,7 @@ public class MenuWindow extends JFrame {
 
   private void randomActionPerformed(ActionEvent evt) {
     Level level = new Level(config, "Random");
-    level.setMazeLocations(level.createRandomField());
+    level.createRandomField();
     this.dispose();
     new GameWindow(config, level, false).setVisible(true);
   }
