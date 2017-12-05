@@ -95,7 +95,7 @@ public class GameFieldPanel extends JPanel implements Serializable {
 
   private void paintSnake(Graphics g, Snake snake) {
     Point[] snakeLocations = level.getSnakesBodies().get(snake);
-    int snakeOnBoard = level.findSnakePartsOnBoard(snake);
+    int snakeOnBoard = level.findSnakePartsOnBoard(snake).size();
     Point location = level.getFood().getLocation();
     g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
     g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
