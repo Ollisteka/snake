@@ -15,7 +15,7 @@ public class Level implements Serializable {
 
   @Getter
   @Setter
-  Food food;
+  private Food food;
 
   @Getter
   private int width;
@@ -30,8 +30,6 @@ public class Level implements Serializable {
   @Getter
   @Setter
   private Set<Entrance> entrances;
-  //  @Getter
-//  private Point[] snakeLocations;
   @Getter
   @Setter
   private Map<Snake, Point[]> snakesBodies = new HashMap<Snake, Point[]>();
@@ -45,9 +43,10 @@ public class Level implements Serializable {
     generateFood();
   }
 
-  public void putSnakes(List<Snake> snakes) {
+  public void initializeSnakes(List<Snake> snakes) {
     for (Snake snake : snakes) {
       snakesBodies.put(snake, new Point[height * width]);
+      placeSnake(snake);
     }
   }
 
@@ -55,16 +54,18 @@ public class Level implements Serializable {
     food = new Food(findFreeSpot());
   }
 
-  public Set<Wall> createRandomField() {
-    Set<Wall> maze = new HashSet();
+  public void createRandomField() {
+    mazeLocations = new HashSet();
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         if (new Random().nextInt(50) == 0) {
-          maze.add(new Wall(x, y));
+          mazeLocations.add(new Wall(x, y));
         }
       }
     }
-    return maze;
+    if (mazeLocations.size() == 0) {
+      mazeLocations.add(new Wall(0, 0));
+    }
   }
 
   public Point findFreeSpot() {
@@ -102,7 +103,7 @@ public class Level implements Serializable {
   /**
    * Размещает змейку при первом запуске игры
    */
-  public void placeSnake(Snake snake) {
+  private void placeSnake(Snake snake) {
     snakesBodies.get(snake)[0] = findFreeSpot();
   }
 
@@ -113,17 +114,17 @@ public class Level implements Serializable {
    */
   public void placeSnake(Level previousLevel, Snake snake) {
     Point prevSnakeHead = previousLevel.snakesBodies.get(snake)[0];
-    char inputEntry = previousLevel.getEntranceName(prevSnakeHead);
-    snakesBodies.get(snake)[0] = findEntry(inputEntry);
+    char inputEntry = previousLevel.getOpenedEntranceName(prevSnakeHead);
+    snakesBodies.get(snake)[0] = findOpenedEntry(inputEntry);
   }
 
 
   /**
-   * Ищет в данном уровне вход с названием inputEntry
+   * Ищет в данном уровне открытый вход с названием inputEntry
    *
    * @return местоположение входа
    */
-  public Point findEntry(char inputEntry) {
+  public Point findOpenedEntry(char inputEntry) {
     Set<Entrance> openedEntrances = findOpenEntrances();
     for (Entrance openedEntry : openedEntrances) {
       if (openedEntry.getName() == inputEntry) {
@@ -175,7 +176,7 @@ public class Level implements Serializable {
    *
    * @return имя входа
    */
-  public char getEntranceName(Point location) {
+  public char getOpenedEntranceName(Point location) {
     Set<Entrance> openedEntrances = findOpenEntrances();
     for (Entrance openedEntry : openedEntrances) {
       Point entryLocation = openedEntry.getLocation();

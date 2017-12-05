@@ -95,12 +95,12 @@ public class Serialization {
         }
         if (Character.isLowerCase(line.charAt(j))) {
           //вход\выход из уровня, открытый
-          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), levelName, true));
+          entrances.add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), true));
         }
         if (Character.isUpperCase(line.charAt(j))) {
           //вход\выход из уровня, закрыт
           entrances
-              .add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), levelName, false));
+              .add(new Entrance(j, i, Character.toLowerCase(line.charAt(j)), false));
         }
         width = j;
       }
