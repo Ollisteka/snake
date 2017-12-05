@@ -152,15 +152,15 @@ public class GameWindow extends JFrame implements ActionListener {
         if (snakeTwo.isAlive() && key == KeyEvent.VK_A) {
           snakeTwo.moveLeft();
         }
-      }
-      if (snakeTwo.isAlive() && key == KeyEvent.VK_W) {
-        snakeTwo.moveUp();
-      }
-      if (snakeTwo.isAlive() && key == KeyEvent.VK_D) {
-        snakeTwo.moveRight();
-      }
-      if (snakeTwo.isAlive() && key == KeyEvent.VK_S) {
-        snakeTwo.moveDown();
+        if (snakeTwo.isAlive() && key == KeyEvent.VK_W) {
+          snakeTwo.moveUp();
+        }
+        if (snakeTwo.isAlive() && key == KeyEvent.VK_D) {
+          snakeTwo.moveRight();
+        }
+        if (snakeTwo.isAlive() && key == KeyEvent.VK_S) {
+          snakeTwo.moveDown();
+        }
       }
     }
   }

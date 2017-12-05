@@ -53,16 +53,12 @@ public class MenuWindow extends JFrame {
         startNewStory(evt);
       } catch (IOException e) {
         e.printStackTrace();
-      } catch (ClassNotFoundException e) {
-        e.printStackTrace();
       }
     });
     buttonMultiplayer.addActionListener(evt -> {
       try {
         multiplayerActionPerformed(evt);
       } catch (IOException e) {
-        e.printStackTrace();
-      } catch (ClassNotFoundException e) {
         e.printStackTrace();
       }
     });
@@ -154,7 +150,7 @@ public class MenuWindow extends JFrame {
     try {
       Level level = Serialization.deserialize();
       new GameWindow(config, level, false).setVisible(true);
-    } catch (IOException | ClassNotFoundException e) {
+    } catch (IOException e) {
       new MenuWindow().setVisible(true);
     }
     this.dispose();
