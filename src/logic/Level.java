@@ -32,10 +32,11 @@ public class Level implements Serializable {
   private Set<Entrance> entrances;
   @Getter
   @Setter
-  private Map<Snake, Point[]> snakesBodies = new HashMap<Snake, Point[]>();
+  private Map<Snake, Point[]> snakesBodies;
 
   public Level(Config config, String level) {
     levelName = level;
+    snakesBodies = new HashMap<>();
     mazeLocations = new HashSet<>();
     entrances = new HashSet<>();
     width = config.getFieldWidth();

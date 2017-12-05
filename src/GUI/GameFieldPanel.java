@@ -27,6 +27,7 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private Image gameOver;
   private Image wallIm;
   private Image headIm;
+  private Image secondHeadIm;
   private Image closedImage;
   @Getter
   @Setter
@@ -71,6 +72,8 @@ public class GameFieldPanel extends JPanel implements Serializable {
     wallIm = p.getImage();
     ImageIcon q = new ImageIcon("head.png");
     headIm = q.getImage();
+    ImageIcon q2 = new ImageIcon("head2.png");
+    secondHeadIm = q2.getImage();
     ImageIcon c = new ImageIcon("closed_lock.png");
     closedImage = c.getImage();
   }
@@ -93,19 +96,21 @@ public class GameFieldPanel extends JPanel implements Serializable {
     }
   }
 
-  private void paintSnake(Graphics g, Snake snake) {
+  private void paintSnake(Graphics g, Snake snake, boolean isSecond) {
     Point[] snakeLocations = level.getSnakesBodies().get(snake);
     int snakeOnBoard = level.findSnakePartsOnBoard(snake).size();
-    Point location = level.getFood().getLocation();
-    g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
-    g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
+    if (isSecond){
+      g.drawImage(secondHeadIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
+    } else {
+      g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
+    }
+    //g.drawImage(head, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
     for (int i = 1; i < snakeOnBoard; i++) {
       if (snakeLocations[i].x >= width || snakeLocations[i].y >= height) {
         continue;
       }
       g.drawImage(snakeIm, snakeLocations[i].x * pixel, snakeLocations[i].y * pixel, this);
     }
-
   }
 
   private void paintScores(Graphics g) {
@@ -114,6 +119,11 @@ public class GameFieldPanel extends JPanel implements Serializable {
     g.setColor(Color.cyan);
     g.drawString("Score:", width * pixel + 100, 100);
     g.drawString(Integer.toString(game.getScore()), width * pixel + 100, 150);
+  }
+
+  private void paintFood(Graphics g) {
+    Point location = level.getFood().getLocation();
+    g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
   }
 
   @Override
@@ -126,11 +136,12 @@ public class GameFieldPanel extends JPanel implements Serializable {
         return;
       }
     }
-    for (Snake snake : game.getSnakes()) {
-      paintSnake(g, snake);
-      paintWalls(g);
-      paintEntrances(g);
+    for (int i=0; i < game.getSnakes().size(); i++) {
+      paintSnake(g, game.getSnakes().get(i), i != 0);
     }
+    paintWalls(g);
+    paintEntrances(g);
+    paintFood(g);
     //сюда можно запихнуть метод, который будет проверять все координаты, и рисовать поверх чёрное
     // если там нет змей.
     paintScores(g);
