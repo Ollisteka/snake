@@ -70,25 +70,28 @@ public class Level implements Serializable {
   }
 
   public Point findFreeSpot() {
-    repeat:
     while (true) {
+      boolean repeat = false;
       int x = rnd.nextInt(width - 1);
       int y = rnd.nextInt(height - 1);
       for (Wall wall : mazeLocations) {
         if (wall.getLocation().x == x && wall.getLocation().y == y) {
-          break repeat;
+          repeat = true;
+          break;
         }
       }
+      outer:
       for (Snake snake : snakesBodies.keySet()) {
         for (Point point : findSnakePartsOnBoard(snake)) {
           if (point.x == x && point.y == y) {
-            break repeat;
+            repeat = true;
+            break outer;
           }
         }
       }
-      return new Point(x, y);
+      if (!repeat)
+        return new Point(x, y);
     }
-    return null;
   }
 
   public Set<Entrance> findOpenEntrances() {

@@ -44,7 +44,6 @@ public class Serialization {
     }
     ArrayList<String> lines = readLines(level);
     return convertIntoLevel(lines, "random");
-
   }
 
   public static Level deserialize(String filename) throws IOException {
