@@ -68,21 +68,25 @@ public class Level implements Serializable {
   }
 
   public Point findFreeSpot() {
+    repeat:
     while (true) {
       int x = rnd.nextInt(width - 1);
       int y = rnd.nextInt(height - 1);
-      boolean repeat = false;
       for (Wall wall : mazeLocations) {
         if (wall.getLocation().x == x && wall.getLocation().y == y) {
-          repeat = true;
-          break;
+          break repeat;
         }
       }
-      if (repeat) {
-        continue;
+      for (Snake snake : snakesBodies.keySet()) {
+        for (Point point : findSnakePartsOnBoard(snake)) {
+          if (point.x == x && point.y == y) {
+            break repeat;
+          }
+        }
       }
       return new Point(x, y);
     }
+    return null;
   }
 
   public Set<Entrance> findOpenEntrances() {
@@ -131,16 +135,16 @@ public class Level implements Serializable {
   }
 
   /**
-   * Количество клеток поля, занятых змейкой
+   * Клетки поля, занятых змейкой
    */
-  public int findSnakePartsOnBoard(Snake snake) {
-    int count = 0;
+  public Set<Point> findSnakePartsOnBoard(Snake snake) {
+    Set<Point> result = new HashSet<Point>();
     for (Point point : snakesBodies.get(snake)) {
       if (point != null) {
-        count++;
+        result.add(point);
       }
     }
-    return count;
+    return result;
   }
 
 

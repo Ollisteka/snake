@@ -127,7 +127,7 @@ public class Game {
     if (snakeLocations == null) {
       return;
     }
-    int snakeOnBoard = level.findSnakePartsOnBoard(snake);
+    int snakeOnBoard = level.findSnakePartsOnBoard(snake).size();
     Point tail = null;
     if (snakeOnBoard == 0) {
       return;
@@ -164,7 +164,7 @@ public class Game {
 
   public void tryToDie(Snake snake) {
     Point[] snakeLocations = currentLevel.getSnakesBodies().get(snake);
-    int snakeOnBoard = currentLevel.findSnakePartsOnBoard(snake);
+    int snakeOnBoard = currentLevel.findSnakePartsOnBoard(snake).size();
     if (snakeOnBoard == 0) {
       return;
     }
