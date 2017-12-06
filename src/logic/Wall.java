@@ -9,8 +9,8 @@ public class Wall implements Serializable {
   @Getter
   private Point location;
 
-  public Wall(int width, int height) {
-    location = new Point(width, height);
+  public Wall(int x, int y) {
+    location = new Point(x, y);
   }
 
   @Override
