@@ -29,9 +29,6 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private Image headIm;
   private Image secondHeadIm;
   private Image closedImage;
-  @Getter
-  @Setter
-  private boolean isPause = false;
 
   @Getter
   private Level level;
@@ -104,7 +101,6 @@ public class GameFieldPanel extends JPanel implements Serializable {
     } else {
       g.drawImage(headIm, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
     }
-    //g.drawImage(head, snakeLocations[0].x * pixel, snakeLocations[0].y * pixel, this);
     for (int i = 1; i < snakeOnBoard; i++) {
       if (snakeLocations[i].x >= width || snakeLocations[i].y >= height) {
         continue;
@@ -114,11 +110,24 @@ public class GameFieldPanel extends JPanel implements Serializable {
   }
 
   private void paintScores(Graphics g) {
+    for (int i=0; i < game.getSnakes().size(); i++) {
+      Snake snake = game.getSnakes().get(i);
+      int offset;
+      if (i == 0) {
+        g.setColor(Color.yellow);
+        offset = 100;
+      } else {
+        g.setColor(Color.cyan);
+        offset = 150;
+      }
+      g.drawString("Score:", width * pixel + 100, offset);
+      g.drawString(Integer.toString(snake.getLength() * 10), width * pixel + 100, offset + 25);
+    }
+  }
+
+  private void paintFrame(Graphics g) {
     g.setColor(Color.green);
     g.drawRect(0, 0, width * pixel, height * pixel);
-    g.setColor(Color.cyan);
-    g.drawString("Score:", width * pixel + 100, 100);
-    g.drawString(Integer.toString(game.getScore()), width * pixel + 100, 150);
   }
 
   private void paintFood(Graphics g) {
@@ -129,21 +138,21 @@ public class GameFieldPanel extends JPanel implements Serializable {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    for (Snake snake : game.getSnakes()) {
-      if (!snake.isAlive()) {
+    for (int i=0; i < game.getSnakes().size(); i++) {
+      Snake snake = game.getSnakes().get(i);
+      if (!snake.isAlive() || game.isPaused()) {
+        game.setPaused(true);
         paintGameOver(g);
         paintScores(g);
         return;
+      } else {
+        paintSnake(g, snake, i != 0);
+        paintFrame(g);
+        paintWalls(g);
+        paintEntrances(g);
+        paintFood(g);
       }
     }
-    for (int i=0; i < game.getSnakes().size(); i++) {
-      paintSnake(g, game.getSnakes().get(i), i != 0);
-    }
-    paintWalls(g);
-    paintEntrances(g);
-    paintFood(g);
-    //сюда можно запихнуть метод, который будет проверять все координаты, и рисовать поверх чёрное
-    // если там нет змей.
     paintScores(g);
   }
 }

@@ -90,6 +90,9 @@ public class GameWindow extends JFrame implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    if (game.isPaused()) {
+        timer.stop();
+    }
     Entrance possibleEntrance = game.getCurrentLevel().canMoveToNextLevel(game.getSnakes().get(0));
     if (possibleEntrance != null) {
       currentGameField.setVisible(false);
@@ -135,11 +138,11 @@ public class GameWindow extends JFrame implements ActionListener {
       }
 
       if (key == KeyEvent.VK_SPACE) {
-        if (currentGameField.isPause()) {
-          currentGameField.setPause(false);
+        if (game.isPaused()) {
+          game.setPaused(false);
           timer.start();
         } else {
-          currentGameField.setPause(true);
+          game.setPaused(true);
           timer.stop();
         }
       }
