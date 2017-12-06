@@ -33,7 +33,7 @@ public class MenuWindow extends JFrame {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setLocation(600, 400);
     setTitle("Snake: menu");
-    config = new Config(25, 25, 25, 250);
+    config = new Config(25, 25, 25, 150);
 
     buttonMultiplayer = new JButton(" Multiplayer game ");
     buttonStart = new JButton(" Start new game ");
@@ -141,9 +141,9 @@ public class MenuWindow extends JFrame {
 
   private void multiplayerActionPerformed(ActionEvent evt)
       throws IOException {
-    List<Level> levels = readLevels();
+    Level level = Serialization.deserialize("multiplayer.txt");
     this.dispose();
-    new GameWindow(levels, config, true).setVisible(true);
+    new GameWindow(config, level, true).setVisible(true);
   }
 
   private void uploadActionPerformed(ActionEvent evt) {
