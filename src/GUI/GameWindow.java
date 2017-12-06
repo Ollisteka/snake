@@ -18,9 +18,7 @@ import logic.Snake;
 public class GameWindow extends JFrame implements ActionListener {
 
   private GameFieldPanel currentGameField;
-  //private Level currentLevel;
   private Game game;
-  // private List<Level> levels;
   private Timer timer;
 
   public GameWindow(Config config, Level level, boolean twoPlayers) {
