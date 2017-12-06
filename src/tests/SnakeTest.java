@@ -86,13 +86,13 @@ public class SnakeTest {
   }
 
   @Test
-    public void dieSnakeTest() {
-      Snake snake = new Snake();
-      snake.die();
-      assertFalse(snake.isAlive());
-      assertFalse(snake.looksDown());
-      assertFalse(snake.looksLeft());
-      assertFalse(snake.looksRight());
-      assertFalse(snake.looksUp());
+  public void dieSnakeTest() {
+    Snake snake = new Snake();
+    snake.die();
+    assertFalse(snake.isAlive());
+    assertFalse(snake.looksDown());
+    assertFalse(snake.looksLeft());
+    assertFalse(snake.looksRight());
+    assertFalse(snake.looksUp());
   }
 }
