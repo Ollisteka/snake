@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,8 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private Image headIm;
   private Image secondHeadIm;
   private Image closedImage;
+  private Image background;
+  private Image blackRoom;
 
   @Getter
   private Level level;
@@ -71,7 +74,7 @@ public class GameFieldPanel extends JPanel implements Serializable {
     snakeIm = s.getImage();
     ImageIcon g = new ImageIcon("gameOver.jpg");
     gameOver = g.getImage();
-    ImageIcon p = new ImageIcon("bush.jpg");
+    ImageIcon p = new ImageIcon("brick.png");
     wallIm = p.getImage();
     ImageIcon q = new ImageIcon("head.png");
     headIm = q.getImage();
@@ -79,6 +82,10 @@ public class GameFieldPanel extends JPanel implements Serializable {
     secondHeadIm = q2.getImage();
     ImageIcon c = new ImageIcon("closed_lock.png");
     closedImage = c.getImage();
+    ImageIcon b = new ImageIcon("House.png");
+    background = b.getImage();
+    ImageIcon r = new ImageIcon("light_off.jpg");
+    blackRoom = r.getImage();
   }
 
   private void paintGameOver(Graphics g) {
@@ -141,40 +148,38 @@ public class GameFieldPanel extends JPanel implements Serializable {
     g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
   }
 
+  private void paintBackground(Graphics g) {
+    g.drawImage(background, 0, 0, this);
+  }
 
   private void handleSublevels(Graphics g) {
     int xAxis = game.getCurrentLevel().getXAxis();
     int yAxis = game.getCurrentLevel().getYAxis();
     HashMap<Sublevels, List<Point>> sublevels = game.getCurrentLevel().getSubLevels();
     if (sublevels.get(Sublevels.UpperLeft).size() == 0) {
-      paintHidingPicture(g, 0, xAxis, 0, yAxis);
+      paintHidingPicture(g, 1, xAxis, 1, yAxis);
     }
     if (sublevels.get(Sublevels.UpperRight).size() == 0) {
-      paintHidingPicture(g, xAxis, width, 0, yAxis);
+      paintHidingPicture(g, xAxis + 1, width - 1, 1, yAxis);
     }
     if (sublevels.get(Sublevels.LowerLeft).size() == 0) {
-      paintHidingPicture(g, 0, xAxis, yAxis, height);
+      paintHidingPicture(g, 1, xAxis, yAxis + 1, height - 1);
     }
     if (sublevels.get(Sublevels.LowerRight).size() == 0) {
-      paintHidingPicture(g, xAxis, width, yAxis, height);
+      paintHidingPicture(g, xAxis + 1, width - 1, yAxis + 1, height - 1);
     }
   }
   private void paintHidingPicture(Graphics g, int xFrom, int xTo, int yFrom, int yTo) {
-    //тут надо нарисовать картинку с такими координатами:
-    //(xFrom,yFrom)
-    //+---------------+
-    //+               +
-    //+---------------+ (xTo, yTo)
-    //хм, возможно не совсем с такими, надо учитывать, что дырки
-    //в стенах должны быть видны
-    //throw new NotImplementedException();
+    int width = (xTo - xFrom)* pixel;
+    int height = (yTo - yFrom) * pixel;
+    g.drawImage(blackRoom, xFrom * pixel, yFrom * pixel, width, height, this);
   }
 
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    if (game.getCurrentLevel().getSubLevels().size() != 0) {
-      handleSublevels(g);
+    if (game.getCurrentLevel().getSubLevels().size() != 0 && !game.isPaused()) {
+      paintBackground(g);
     }
     for (int i=0; i < game.getSnakes().size(); i++) {
       Snake snake = game.getSnakes().get(i);
@@ -189,6 +194,9 @@ public class GameFieldPanel extends JPanel implements Serializable {
         paintWalls(g);
         paintEntrances(g);
         paintFood(g);
+        if (game.getCurrentLevel().getSubLevels().size() != 0) {
+          handleSublevels(g);
+        }
       }
     }
     paintScores(g);
