@@ -5,12 +5,12 @@ import lombok.Getter;
 public class Separator {
 
   @Getter
-  private int xAxis;
+  private int coordinate;
   @Getter
-  private int yAxis;
+  private boolean isHorizontal;
 
-  public Separator(int x, int y) {
-    xAxis = x;
-    yAxis = y;
+  public Separator(int coordinate, boolean isHorizontal) {
+    this.coordinate = coordinate;
+    this.isHorizontal = isHorizontal;
   }
 }

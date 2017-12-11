@@ -36,6 +36,12 @@ public class Level implements Serializable {
   @Getter
   @Setter
   private Map<Snake, Point[]> snakesBodies;
+  @Getter
+  private int xAxis;
+  @Getter
+  private int yAxis;
+  @Getter
+  private HashMap<Sublevels, List<Point>> subLevels = new HashMap<>();
 
   public Level(Config config, String level) {
     levelName = level;
@@ -71,6 +77,17 @@ public class Level implements Serializable {
       mazeLocations.add(new Wall(0, 0));
     }
   }
+
+  public void initAxis() {
+    for (Separator separator : getSubLevelSeparators()) {
+      if (separator.isHorizontal()) {
+        xAxis = separator.getCoordinate();
+      } else {
+        yAxis = separator.getCoordinate();
+      }
+    }
+  }
+
 
   public Point findFreeSpot() {
     while (true) {

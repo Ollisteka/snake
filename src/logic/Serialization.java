@@ -93,12 +93,12 @@ public class Serialization {
       for (int j = 0; j < line.length(); j++) {
         if (line.charAt(j) == '<') {
           // тут могла координаты перепутать
-          separators.add(new Separator(0, i));
+          separators.add(new Separator(i, false));
           maze.add(new Wall(j, i));
         }
         if (line.charAt(j) == '^') {
           // тут могла координаты перепутать
-          separators.add(new Separator(j, 0));
+          separators.add(new Separator(j, true));
           maze.add(new Wall(j, i));
         }
         if (line.charAt(j) == '#') {
@@ -122,6 +122,7 @@ public class Serialization {
     level.setMazeLocations(maze);
     level.setEntrances(entrances);
     level.setSubLevelSeparators(separators);
+    level.initAxis();
     return level;
   }
 

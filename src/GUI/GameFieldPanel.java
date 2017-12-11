@@ -5,17 +5,16 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import logic.Config;
 import logic.Entrance;
 import logic.Game;
 import logic.Level;
-import logic.Separator;
 import logic.Snake;
+import logic.Sublevels;
 import logic.Wall;
 import lombok.Getter;
 
@@ -36,24 +35,13 @@ public class GameFieldPanel extends JPanel implements Serializable {
 
   @Getter
   private Level level;
-  private int xAxis;
-  private int yAxis;
 
   public GameFieldPanel(Game game, Level currentLevel) {
     initGameSettings(game, currentLevel);
-    initAxis();
+
   }
 
-  private void initAxis() {
-    for (Separator separator : level.getSubLevelSeparators()) {
-      if (separator.getXAxis() == 0) {
-        yAxis = separator.getYAxis();
-      }
-      if (separator.getYAxis() == 0) {
-        xAxis = separator.getXAxis();
-      }
-    }
-  }
+
 
   private void initGameSettings(Game game, Level currentLevel) {
     this.game = game;
@@ -153,44 +141,24 @@ public class GameFieldPanel extends JPanel implements Serializable {
     g.drawImage(foodIm, location.x * pixel, location.y * pixel, this);
   }
 
-  private void hideSubLevel(Graphics g) {
-    List<Point> snakesPositions = new ArrayList<>();
-    // кидаем все змеечные локации в один список
-    for (Snake snake : game.getSnakes()) {
-      snakesPositions.addAll(level.findSnakePartsOnBoard(snake));
-    }
-    //тут идёт фильтрация всех локаций змейки.
-    //я пытаюсь тут отфильровать от всех змеек те клетки,
-    //которые попадают в один из углов.
-    //Соответственно, если в угле что то есть - рисуем поверх картинку
-    List<Point> upperLeft = snakesPositions.stream()
-        .filter(p -> p.x < xAxis && p.y < yAxis)
-        .collect(Collectors.toList());
-    List<Point> upperRight = snakesPositions.stream()
-        .filter(p -> p.x > xAxis && p.y < yAxis)
-        .collect(Collectors.toList());
-    List<Point> lowerLeft = snakesPositions.stream()
-        .filter(p -> p.x < xAxis && p.y > yAxis)
-        .collect(Collectors.toList());
-    List<Point> lowerRight = snakesPositions.stream()
-        .filter(p -> p.x > xAxis && p.y > yAxis)
-        .collect(Collectors.toList());
 
-    if (upperLeft.size() == 0) {
+  private void handleSublevels(Graphics g) {
+    int xAxis = game.getCurrentLevel().getXAxis();
+    int yAxis = game.getCurrentLevel().getYAxis();
+    HashMap<Sublevels, List<Point>> sublevels = game.getCurrentLevel().getSubLevels();
+    if (sublevels.get(Sublevels.UpperLeft).size() == 0) {
       paintHidingPicture(g, 0, xAxis, 0, yAxis);
     }
-    if (upperRight.size() == 0) {
+    if (sublevels.get(Sublevels.UpperRight).size() == 0) {
       paintHidingPicture(g, xAxis, width, 0, yAxis);
     }
-    if (lowerLeft.size() == 0) {
+    if (sublevels.get(Sublevels.LowerLeft).size() == 0) {
       paintHidingPicture(g, 0, xAxis, yAxis, height);
     }
-    if (lowerRight.size() == 0) {
+    if (sublevels.get(Sublevels.LowerRight).size() == 0) {
       paintHidingPicture(g, xAxis, width, yAxis, height);
     }
-
   }
-
   private void paintHidingPicture(Graphics g, int xFrom, int xTo, int yFrom, int yTo) {
     //тут надо нарисовать картинку с такими координатами:
     //(xFrom,yFrom)
@@ -205,8 +173,8 @@ public class GameFieldPanel extends JPanel implements Serializable {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    if (level.getSubLevelSeparators().size() == 2) {
-      hideSubLevel(g);
+    if (game.getCurrentLevel().getSubLevels().size() != 0) {
+      handleSublevels(g);
     }
     for (int i=0; i < game.getSnakes().size(); i++) {
       Snake snake = game.getSnakes().get(i);
@@ -225,6 +193,8 @@ public class GameFieldPanel extends JPanel implements Serializable {
     }
     paintScores(g);
   }
+
+
 }
 
 

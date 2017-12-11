@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -103,6 +104,38 @@ public class Game {
     }
 
     return closedEntrances;
+  }
+
+  public void findSnakesInSublevels() {
+    List<Point> snakesPositions = new ArrayList<>();
+    // кидаем все змеечные локации в один список
+    for (Snake snake : getSnakes()) {
+      snakesPositions.addAll(currentLevel.findSnakePartsOnBoard(snake));
+    }
+    int xAxis = currentLevel.getXAxis();
+    int yAxis = currentLevel.getYAxis();
+    //тут идёт фильтрация всех локаций змейки.
+    //я пытаюсь тут отфильровать от всех змеек те клетки,
+    //которые попадают в один из углов.
+    //Соответственно, если в угле что то есть - рисуем поверх картинку
+    List<Point> upperLeft = snakesPositions.stream()
+        .filter(p -> p.x < xAxis && p.y < yAxis)
+        .collect(Collectors.toList());
+    List<Point> upperRight = snakesPositions.stream()
+        .filter(p -> p.x > xAxis && p.y < yAxis)
+        .collect(Collectors.toList());
+    List<Point> lowerLeft = snakesPositions.stream()
+        .filter(p -> p.x < xAxis && p.y > yAxis)
+        .collect(Collectors.toList());
+    List<Point> lowerRight = snakesPositions.stream()
+        .filter(p -> p.x > xAxis && p.y > yAxis)
+        .collect(Collectors.toList());
+
+    currentLevel.getSubLevels().put(Sublevels.UpperLeft, upperLeft);
+    currentLevel.getSubLevels().put(Sublevels.UpperRight, upperRight);
+    currentLevel.getSubLevels().put(Sublevels.LowerRight, lowerRight);
+    currentLevel.getSubLevels().put(Sublevels.LowerLeft, lowerLeft);
+
   }
 
   public void tryEatFood(Game game, Snake snake) {
