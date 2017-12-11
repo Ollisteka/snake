@@ -86,9 +86,21 @@ public class Serialization {
     int i = 0;
     Set<Wall> maze = new HashSet<>();
     Set<Entrance> entrances = new HashSet<>();
+    Set<Separator> separators = new HashSet<>();
+
     int width = 0;
     for (String line : lines) {
       for (int j = 0; j < line.length(); j++) {
+        if (line.charAt(j) == '<') {
+          // тут могла координаты перепутать
+          separators.add(new Separator(0, i));
+          maze.add(new Wall(j, i));
+        }
+        if (line.charAt(j) == '^') {
+          // тут могла координаты перепутать
+          separators.add(new Separator(j, 0));
+          maze.add(new Wall(j, i));
+        }
         if (line.charAt(j) == '#') {
           maze.add(new Wall(j, i));
         }
@@ -109,6 +121,7 @@ public class Serialization {
     Level level = new Level(config, levelName);
     level.setMazeLocations(maze);
     level.setEntrances(entrances);
+    level.setSubLevelSeparators(separators);
     return level;
   }
 

@@ -29,6 +29,9 @@ public class Level implements Serializable {
   private Set<Wall> mazeLocations;
   @Getter
   @Setter
+  private Set<Separator> subLevelSeparators;
+  @Getter
+  @Setter
   private Set<Entrance> entrances;
   @Getter
   @Setter

@@ -30,11 +30,13 @@ public class Game {
   @Getter
   @Setter
   private Level currentLevel;
+  private boolean twoPlayers;
 
   public Game(Config config, Level level, boolean twoPlayers) {
     this.config = config;
     levels.add(level);
     currentLevel = level;
+    this.twoPlayers = twoPlayers;
     placeSnakes(twoPlayers);
   }
 
@@ -45,6 +47,7 @@ public class Game {
     this.levels = levels;
     currentLevel = levels.get(0);
     placeSnakes(twoPlayers);
+    this.twoPlayers = twoPlayers;
   }
 
   private void placeSnakes(boolean twoPlayers) {
@@ -104,8 +107,9 @@ public class Game {
 
   public void tryEatFood(Game game, Snake snake) {
     Point[] snakeLocations = currentLevel.getSnakesBodies().get(snake);
-    if (snakeLocations[0].x == currentLevel.getFood().getLocation().x
-        && snakeLocations[0].y == currentLevel.getFood().getLocation().y) {
+    Point snakeHead = snakeLocations[0];
+    if (snakeHead.x == currentLevel.getFood().getLocation().x
+        && snakeHead.y == currentLevel.getFood().getLocation().y) {
       snake.eatFood();
       game.addScore();
       currentLevel.generateFood();
@@ -116,6 +120,7 @@ public class Game {
 
   public void moveSnake(Level level, Snake snake) {
     Point[] snakeLocations = level.getSnakesBodies().get(snake);
+    Point snakeHead = snakeLocations[0];
     if (snakeLocations == null) {
       return;
     }
@@ -134,19 +139,19 @@ public class Game {
     }
 
     if (snake.looksRight()) {
-      snakeLocations[0].x++;
+      snakeHead.x++;
 
     }
     if (snake.looksLeft()) {
-      snakeLocations[0].x--;
+      snakeHead.x--;
 
     }
     if (snake.looksUp()) {
-      snakeLocations[0].y--;
+      snakeHead.y--;
 
     }
     if (snake.looksDown()) {
-      snakeLocations[0].y++;
+      snakeHead.y++;
     }
     if (snakeOnBoard != snake.getLength()) {
       snakeLocations[snakeOnBoard] = tail;
@@ -156,26 +161,40 @@ public class Game {
 
   public void tryToDie(Snake snake) {
     Point[] snakeLocations = currentLevel.getSnakesBodies().get(snake);
+    Point snakeHead = snakeLocations[0];
     int snakeOnBoard = currentLevel.findSnakePartsOnBoard(snake).size();
     if (snakeOnBoard == 0) {
       return;
     }
     for (int j = 2; j < snakeOnBoard; j++) {
-      if (snakeLocations[0].x == snakeLocations[j].x &&
-          snakeLocations[0].y == snakeLocations[j].y) {
+      if (snakeHead.x == snakeLocations[j].x &&
+          snakeHead.y == snakeLocations[j].y) {
         snake.die();
       }
     }
-    if (snakeLocations[0].x < 0 ||
-        snakeLocations[0].y < 0 ||
-        snakeLocations[0].x >= currentLevel.getWidth() ||
-        snakeLocations[0].y >= currentLevel.getHeight()) {
+    if (snakeHead.x < 0 ||
+        snakeHead.y < 0 ||
+        snakeHead.x >= currentLevel.getWidth() ||
+        snakeHead.y >= currentLevel.getHeight()) {
       snake.die();
     }
     for (Wall wall : currentLevel.getMazeLocations()) {
-      if (snakeLocations[0].x == wall.getLocation().x &&
-          snakeLocations[0].y == wall.getLocation().y) {
+      if (snakeHead.x == wall.getLocation().x &&
+          snakeHead.y == wall.getLocation().y) {
         snake.die();
+      }
+    }
+    if (twoPlayers) {
+      for (Snake anotherSnake : currentLevel.getSnakesBodies().keySet()) {
+        if (anotherSnake == snake) {
+          continue;
+        }
+        for (Point anotherSnakeLocation : currentLevel.findSnakePartsOnBoard(anotherSnake)) {
+          if (snakeHead.x == anotherSnakeLocation.x &&
+              snakeHead.y == anotherSnakeLocation.y) {
+            snake.die();
+          }
+        }
       }
     }
   }
