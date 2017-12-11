@@ -103,6 +103,7 @@ public class LevelEditorWindow extends JFrame {
     this.dispose();
     Config config = new Config(25, 25, 25, 250);
     Level level = redactor.getLevel();
+    level.generateFood();
 
     new GameWindow(config, level, false).setVisible(true);
     // Здесь надо вытащить уровень с redactor (поле этого же класса)
