@@ -50,7 +50,7 @@ public class Level implements Serializable {
     entrances = new HashSet<>();
     width = config.getFieldWidth();
     height = config.getFieldHeight();
-    generateFood();
+    //generateFood();
   }
 
   public void initializeSnakes(List<Snake> snakes) {
