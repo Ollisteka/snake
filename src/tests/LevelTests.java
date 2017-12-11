@@ -29,6 +29,7 @@ public class LevelTests {
   @Before
   public void setUp() {
     level = new Level(configuration, name);
+    level.generateFood();
 
     Set<Entrance> entrances = new HashSet<>();
     entrances.add(openedEntrance);
