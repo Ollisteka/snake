@@ -123,6 +123,7 @@ public class Serialization {
     level.setEntrances(entrances);
     level.setSubLevelSeparators(separators);
     level.initAxis();
+    level.generateFood();
     return level;
   }
 

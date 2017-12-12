@@ -41,16 +41,18 @@ public class Level implements Serializable {
   @Getter
   private int yAxis;
   @Getter
-  private HashMap<Sublevels, List<Point>> subLevels = new HashMap<>();
+  private Map<Sublevels, List<Point>> subLevels;
 
   public Level(Config config, String level) {
     levelName = level;
     snakesBodies = new HashMap<>();
     mazeLocations = new HashSet<>();
+    subLevelSeparators = new HashSet<>();
     entrances = new HashSet<>();
+    subLevels = new HashMap<>();
     width = config.getFieldWidth();
     height = config.getFieldHeight();
-    generateFood();
+    //generateFood();
   }
 
   public void initializeSnakes(List<Snake> snakes) {
@@ -76,6 +78,7 @@ public class Level implements Serializable {
     if (mazeLocations.size() == 0) {
       mazeLocations.add(new Wall(0, 0));
     }
+    generateFood();
   }
 
   public void initAxis() {

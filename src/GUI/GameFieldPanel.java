@@ -6,8 +6,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import logic.Config;
@@ -158,7 +158,7 @@ public class GameFieldPanel extends JPanel implements Serializable {
   private void handleSublevels(Graphics g) {
     int xAxis = game.getCurrentLevel().getXAxis();
     int yAxis = game.getCurrentLevel().getYAxis();
-    HashMap<Sublevels, List<Point>> sublevels = game.getCurrentLevel().getSubLevels();
+    Map<Sublevels, List<Point>> sublevels = game.getCurrentLevel().getSubLevels();
     if (sublevels.get(Sublevels.UpperLeft).size() == 0) {
       paintHidingPicture(g, 1, xAxis, 1, yAxis);
     }
