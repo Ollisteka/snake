@@ -1,10 +1,10 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +48,9 @@ public class GameFieldPanel extends JPanel implements Serializable {
 
   private void initGameSettings(Game game, Level currentLevel) {
     this.game = game;
+
+      Font font = new Font("Comic Sans MS", Font.PLAIN, 25);
+      setFont(font);
     Config config = game.getConfig();
     width = config.getFieldWidth();
     height = config.getFieldHeight();

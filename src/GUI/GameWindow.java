@@ -26,7 +26,6 @@ public class GameWindow extends JFrame implements ActionListener {
     game = new Game(config, level, twoPlayers);
     currentGameField = new GameFieldPanel(game, level);
     add(currentGameField);
-    setVisible(true);
   }
 
 
@@ -35,7 +34,6 @@ public class GameWindow extends JFrame implements ActionListener {
     game = new Game(config, levels, twoPlayers);
     currentGameField = new GameFieldPanel(game, game.getCurrentLevel());
     add(currentGameField);
-    setVisible(true);
   }
 
   private void initWindow(Config config) {
@@ -49,6 +47,7 @@ public class GameWindow extends JFrame implements ActionListener {
 
     addKeyListener(new FieldKeyListener());
     setFocusable(true);
+      setResizable(false);
   }
 
   /**

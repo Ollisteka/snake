@@ -29,7 +29,7 @@ public class Level implements Serializable {
   private Set<Wall> mazeLocations;
   @Getter
   @Setter
-  private Set<Separator> subLevelSeparators;
+  private Set<Separator> subLevelSeparators = new HashSet<>();
   @Getter
   @Setter
   private Set<Entrance> entrances;
